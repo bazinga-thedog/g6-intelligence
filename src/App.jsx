@@ -1,12 +1,8 @@
-import Counter from './Counter'
+import LandingPage from './LandingPage'
 import './App.css'
 
 function App() {
-  return (
-    <div className="app">
-      <Counter />
-    </div>
-  )
+  return <LandingPage />
 }
 
 export default App
