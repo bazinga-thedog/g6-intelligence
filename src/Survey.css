@@ -1,0 +1,504 @@
+/* Survey Overlay */
+.survey-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: surveyFadeIn 0.3s ease;
+}
+
+@keyframes surveyFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.survey-container {
+  width: 90%;
+  max-width: 900px;
+  background: #1a1f2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+  animation: surveySlideUp 0.4s ease;
+}
+
+@keyframes surveySlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Progress Bar */
+.survey-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+}
+
+.survey-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4A90E2 0%, #357ABD 100%);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+}
+
+/* Survey Header */
+.survey-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+/* Back Button Top */
+.survey-back-btn-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.survey-back-btn-top:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateX(-4px);
+}
+
+.survey-back-btn-top svg {
+  transition: transform 0.2s ease;
+}
+
+.survey-back-btn-top:hover svg {
+  transform: translateX(-2px);
+}
+
+/* Question Counter */
+.survey-counter {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+}
+
+/* Close Button */
+.survey-close {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.survey-close:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Question Content */
+.survey-content {
+  margin-top: 2rem;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.survey-content.transitioning {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Currency Selector */
+.currency-selector {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.currency-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.currency-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(74, 144, 226, 0.3);
+}
+
+.currency-btn.active {
+  background: rgba(74, 144, 226, 0.15);
+  border-color: rgba(74, 144, 226, 0.5);
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.2);
+}
+
+.currency-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.currency-btn.active .currency-label {
+  color: rgba(74, 144, 226, 1);
+}
+
+.currency-symbol {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.currency-btn.active .currency-symbol {
+  color: rgba(255, 255, 255, 1);
+}
+
+.survey-question {
+  font-size: 2rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.4;
+  margin-bottom: 3rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+/* Survey Options - Card Grid */
+.survey-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.survey-option-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.survey-option-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(53, 122, 189, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.survey-option-card:hover {
+  transform: translateX(8px);
+  border-color: rgba(74, 144, 226, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(74, 144, 226, 0.15);
+}
+
+.survey-option-card:hover::before {
+  opacity: 1;
+}
+
+.survey-option-card:hover .option-arrow {
+  transform: translateX(4px);
+  color: rgba(74, 144, 226, 1);
+}
+
+.survey-option-card:active {
+  transform: translateX(4px);
+}
+
+.option-label {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  letter-spacing: -0.01em;
+}
+
+.option-arrow {
+  color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+
+/* Survey Options - Detailed Vertical List */
+.survey-options-detailed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.survey-option-detailed {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  text-align: left;
+}
+
+.survey-option-detailed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(53, 122, 189, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.survey-option-detailed:hover {
+  transform: translateX(8px);
+  border-color: rgba(74, 144, 226, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(74, 144, 226, 0.15);
+}
+
+.survey-option-detailed:hover::before {
+  opacity: 1;
+}
+
+.survey-option-detailed:hover .option-arrow {
+  transform: translateX(4px);
+  color: rgba(74, 144, 226, 1);
+}
+
+.survey-option-detailed:active {
+  transform: translateX(4px);
+}
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.option-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.01em;
+}
+
+.option-description {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+}
+
+/* Survey Input Section */
+.survey-input-section {
+  max-width: 500px;
+  margin: 3rem auto 0;
+}
+
+.survey-input-wrapper {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.survey-input {
+  width: 100%;
+  padding: 1.5rem 1.75rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.survey-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.survey-input:focus {
+  border-color: rgba(74, 144, 226, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+.input-suffix {
+  position: absolute;
+  right: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.survey-input-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.survey-input-btn {
+  flex: 1;
+  padding: 1.25rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.survey-input-btn.dont-know {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.survey-input-btn.dont-know:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.survey-input-btn.submit {
+  background: rgba(74, 144, 226, 0.2);
+  border: 2px solid rgba(74, 144, 226, 0.4);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.survey-input-btn.submit:hover:not(:disabled) {
+  background: rgba(74, 144, 226, 0.3);
+  border-color: rgba(74, 144, 226, 0.6);
+  transform: translateX(4px);
+}
+
+.survey-input-btn.submit:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .survey-container {
+    width: 95%;
+    padding: 2rem 1.5rem;
+  }
+
+  .survey-question {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .survey-options {
+    grid-template-columns: 1fr;
+  }
+
+  .survey-option-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .option-label {
+    font-size: 1.1rem;
+  }
+
+  .survey-counter {
+    top: 1.5rem;
+    right: 4rem;
+    font-size: 0.75rem;
+  }
+
+  .survey-close {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .survey-back-btn {
+    bottom: 1.5rem;
+    left: 1.5rem;
+  }
+}
