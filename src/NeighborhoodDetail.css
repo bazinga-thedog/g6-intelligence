@@ -1,0 +1,458 @@
+/* Neighborhood Detail Page */
+.neighborhood-detail {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #e5e5e5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Navigation Header */
+.detail-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 4rem;
+  background: #0a0a0a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.detail-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detail-back-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #e5e5e5;
+  transform: translateX(-4px);
+}
+
+.detail-logo h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  letter-spacing: -0.02em;
+}
+
+.detail-logo span {
+  font-weight: 300;
+  color: #e5e5e5;
+}
+
+/* Hero Banner */
+.detail-hero {
+  position: relative;
+  background: #111111;
+}
+
+.detail-hero-image {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+}
+
+.detail-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(10, 10, 10, 0.95) 100%);
+}
+
+.detail-hero-content {
+  padding: 3rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.detail-header {
+  margin-bottom: 2rem;
+}
+
+.detail-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  line-height: 1.1;
+}
+
+.detail-location {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
+.detail-description {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #d1d5db;
+  max-width: 900px;
+}
+
+/* Content Container */
+.detail-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 4rem;
+}
+
+/* Section Styling */
+.detail-section {
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.section-subtitle {
+  font-size: 1.125rem;
+  color: #9ca3af;
+  margin-bottom: 2.5rem;
+}
+
+/* Metrics Grid Large */
+.metrics-grid-large {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.metric-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(74, 144, 226, 0.1);
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  border-radius: 12px;
+  color: #4a90e2;
+  margin-bottom: 1.5rem;
+}
+
+.metric-card-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.metric-card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.metric-card-value.highlight {
+  color: #4a90e2;
+}
+
+/* Trend Charts Container */
+.trends-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.trend-chart-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.trend-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.trend-chart-card .growth-chart {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Popularity Section */
+.popularity-section {
+  background: rgba(74, 144, 226, 0.03);
+  border: 1px solid rgba(74, 144, 226, 0.15);
+  border-radius: 16px;
+  padding: 3rem;
+}
+
+.popularity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.popularity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #e5e5e5;
+  transition: all 0.3s ease;
+}
+
+.popularity-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateX(4px);
+}
+
+.popularity-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: 8px;
+  color: #10b981;
+}
+
+/* Amenities Grid */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.5rem;
+}
+
+.amenity-stat {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.amenity-stat:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+.amenity-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.amenity-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.amenity-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Transportation Grid */
+.transportation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.transport-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.transport-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+}
+
+.transport-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.transport-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.transport-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Lifestyle Grid */
+.lifestyle-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.lifestyle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.lifestyle-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.lifestyle-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lifestyle-badge {
+  padding: 0.75rem 1.5rem;
+  background: rgba(74, 144, 226, 0.15);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4a90e2;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .metrics-grid-large {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .detail-nav,
+  .detail-hero-content,
+  .detail-content {
+    padding: 2rem;
+  }
+
+  .detail-title {
+    font-size: 2.5rem;
+  }
+
+  .detail-location {
+    font-size: 1.25rem;
+  }
+
+  .metrics-grid-large {
+    grid-template-columns: 1fr;
+  }
+
+  .trends-container {
+    grid-template-columns: 1fr;
+  }
+
+  .popularity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .transportation-grid,
+  .lifestyle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-hero-image {
+    height: 300px;
+  }
+
+  .detail-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .amenities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .transportation-grid,
+  .lifestyle-grid {
+    grid-template-columns: 1fr;
+  }
+}

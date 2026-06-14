@@ -367,6 +367,16 @@
   line-height: 1.4;
 }
 
+/* Smaller font for risk tolerance question (Q4) */
+.survey-question.risk-tolerance-question {
+  font-size: 1.5rem;
+}
+
+.survey-option-detailed.risk-tolerance-option .option-title {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 /* Survey Input Section */
 .survey-input-section {
   max-width: 500px;
@@ -390,6 +400,17 @@
   outline: none;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
+}
+
+/* Hide number input spinner arrows */
+.survey-input[type="number"]::-webkit-inner-spin-button,
+.survey-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.survey-input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 .survey-input::placeholder {

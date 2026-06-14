@@ -1,0 +1,45 @@
+// Add to each neighborhood after priceGrowth5Y:
+
+// Lisbon neighborhoods additional metrics:
+// Alfama - DONE
+// Chiado - DONE
+// Belém:
+acquisitionTax: 6.5, avgHoldingTime: 7.8, daysAvailableToRent: 28, rentPerSqm: { EUR: { avg: 15 }, USD: { avg: 16 }, GBP: { avg: 13 } }, rentalGrowth5Y: [3.8, 5.2, 6.8, 8.5, 10.2], avgRentalTime: 15
+
+// Parque das Nações:
+acquisitionTax: 6.5, avgHoldingTime: 6.5, daysAvailableToRent: 20, rentPerSqm: { EUR: { avg: 16 }, USD: { avg: 17 }, GBP: { avg: 14 } }, rentalGrowth5Y: [4.5, 6.2, 7.8, 9.5, 11.8], avgRentalTime: 13
+
+// Príncipe Real:
+acquisitionTax: 6.5, avgHoldingTime: 8.8, daysAvailableToRent: 25, rentPerSqm: { EUR: { avg: 20 }, USD: { avg: 22 }, GBP: { avg: 17 } }, rentalGrowth5Y: [5.2, 6.8, 8.5, 10.2, 12.5], avgRentalTime: 12
+
+// Santos:
+acquisitionTax: 6.5, avgHoldingTime: 7.5, daysAvailableToRent: 26, rentPerSqm: { EUR: { avg: 17 }, USD: { avg: 18 }, GBP: { avg: 15 } }, rentalGrowth5Y: [4.8, 6.5, 8.2, 10.0, 11.8], avgRentalTime: 14
+
+// Dubai neighborhoods:
+// Dubai Marina:
+acquisitionTax: 4.0, avgHoldingTime: 5.5, daysAvailableToRent: 15, rentPerSqm: { EUR: { avg: 24 }, USD: { avg: 26 }, GBP: { avg: 21 } }, rentalGrowth5Y: [6.5, 8.8, 11.5, 14.2, 16.8], avgRentalTime: 11
+
+// Downtown Dubai:
+acquisitionTax: 4.0, avgHoldingTime: 6.2, daysAvailableToRent: 12, rentPerSqm: { EUR: { avg: 28 }, USD: { avg: 30 }, GBP: { avg: 24 } }, rentalGrowth5Y: [5.8, 7.8, 10.5, 13.2, 15.8], avgRentalTime: 12
+
+// Palm Jumeirah:
+acquisitionTax: 4.0, avgHoldingTime: 7.8, daysAvailableToRent: 18, rentPerSqm: { EUR: { avg: 35 }, USD: { avg: 38 }, GBP: { avg: 30 } }, rentalGrowth5Y: [7.2, 9.5, 12.5, 15.2, 18.5], avgRentalTime: 11
+
+// Business Bay:
+acquisitionTax: 4.0, avgHoldingTime: 4.8, daysAvailableToRent: 16, rentPerSqm: { EUR: { avg: 22 }, USD: { avg: 24 }, GBP: { avg: 19 } }, rentalGrowth5Y: [7.8, 10.2, 13.5, 16.8, 19.5], avgRentalTime: 12
+
+// Jumeirah Beach Residence:
+acquisitionTax: 4.0, avgHoldingTime: 5.8, daysAvailableToRent: 17, rentPerSqm: { EUR: { avg: 26 }, USD: { avg: 28 }, GBP: { avg: 22 } }, rentalGrowth5Y: [6.8, 9.2, 12.2, 15.5, 18.2], avgRentalTime: 11
+
+// Porto neighborhoods:
+// Ribeira:
+acquisitionTax: 6.5, avgHoldingTime: 7.2, daysAvailableToRent: 24, rentPerSqm: { EUR: { avg: 19 }, USD: { avg: 21 }, GBP: { avg: 16 } }, rentalGrowth5Y: [6.2, 8.5, 11.2, 14.5, 17.8], avgRentalTime: 13
+
+// Foz do Douro:
+acquisitionTax: 6.5, avgHoldingTime: 9.5, daysAvailableToRent: 28, rentPerSqm: { EUR: { avg: 22 }, USD: { avg: 24 }, GBP: { avg: 19 } }, rentalGrowth5Y: [4.8, 6.8, 9.2, 11.8, 14.5], avgRentalTime: 14
+
+// Boavista:
+acquisitionTax: 6.5, avgHoldingTime: 6.8, daysAvailableToRent: 30, rentPerSqm: { EUR: { avg: 16 }, USD: { avg: 17 }, GBP: { avg: 14 } }, rentalGrowth5Y: [5.5, 7.5, 9.8, 12.5, 15.2], avgRentalTime: 13
+
+// Cedofeita:
+acquisitionTax: 6.5, avgHoldingTime: 6.2, daysAvailableToRent: 32, rentPerSqm: { EUR: { avg: 14 }, USD: { avg: 15 }, GBP: { avg: 12 } }, rentalGrowth5Y: [5.2, 7.2, 9.5, 12.2, 14.8], avgRentalTime: 14

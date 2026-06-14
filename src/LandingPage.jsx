@@ -1,26 +1,31 @@
 import { useState } from 'react'
 import CommentSystem from './CommentSystem'
 import Survey from './Survey'
+import { generateFreshGuid } from './prospectGuid'
 import './LandingPage.css'
 
-export default function LandingPage() {
+export default function LandingPage({ onSurveyComplete }) {
   const [selectedResponse, setSelectedResponse] = useState(null)
   const [showSurvey, setShowSurvey] = useState(false)
 
   const handleResponse = (response) => {
     setSelectedResponse(response)
     if (response === 'yes') {
+      // Generate a fresh GUID every time "Yes" is clicked
+      generateFreshGuid()
       setShowSurvey(true)
     } else {
       console.log('User selected:', response)
     }
   }
 
-  const handleSurveyComplete = (answers) => {
+  const handleSurveyCompleteInternal = (answers) => {
     console.log('Survey completed:', answers)
     setShowSurvey(false)
-    // TODO: Navigate to next page
-    alert('Survey completed! (Next page will be built later)')
+    // Navigate to location showcase page
+    if (onSurveyComplete) {
+      onSurveyComplete()
+    }
   }
 
   const handleSurveyClose = () => {
@@ -30,7 +35,7 @@ export default function LandingPage() {
 
   return (
     <div className="landing">
-      <CommentSystem />
+      <CommentSystem pageId="landing" />
 
       {/* Navigation */}
       <nav className="nav-header">
@@ -212,7 +217,7 @@ export default function LandingPage() {
       {showSurvey && (
         <Survey
           onClose={handleSurveyClose}
-          onComplete={handleSurveyComplete}
+          onComplete={handleSurveyCompleteInternal}
         />
       )}
     </div>

@@ -2,16 +2,20 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import './CommentSystem.css'
 
-export default function CommentSystem() {
+export default function CommentSystem({ pageId = 'landing' }) {
   const [addMode, setAddMode] = useState(false)
   const [viewMode, setViewMode] = useState(false)
   const [comments, setComments] = useState([])
   const [showPopup, setShowPopup] = useState(false)
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 })
   const [commentText, setCommentText] = useState('')
+  const [authorName, setAuthorName] = useState('')
   const [selectedComment, setSelectedComment] = useState(null)
+  const [replyingTo, setReplyingTo] = useState(null)
+  const [showReplyForm, setShowReplyForm] = useState(null)
 
-  const currentPageUrl = window.location.pathname
+  // Use pageId prop instead of just pathname for SPA routing
+  const currentPageUrl = pageId
 
   useEffect(() => {
     loadComments()
@@ -56,19 +60,30 @@ export default function CommentSystem() {
     if (!commentText.trim()) return
 
     try {
+      const commentData = {
+        page_url: currentPageUrl,
+        comment_text: commentText,
+        x_position: popupPosition.x,
+        y_position: popupPosition.y,
+        author_name: authorName.trim() || 'Anonymous'
+      }
+
+      // If replying to a comment, add parent reference
+      if (replyingTo) {
+        commentData.parent_comment_id = replyingTo
+      }
+
       const { error } = await supabase
         .from('page_comments')
-        .insert({
-          page_url: currentPageUrl,
-          comment_text: commentText,
-          x_position: popupPosition.x,
-          y_position: popupPosition.y
-        })
+        .insert(commentData)
 
       if (error) throw error
 
       setShowPopup(false)
       setCommentText('')
+      setAuthorName('')
+      setReplyingTo(null)
+      setShowReplyForm(null)
 
       // Always reload comments to update counter
       loadComments()
@@ -76,6 +91,30 @@ export default function CommentSystem() {
       console.error('Error saving comment:', err)
       alert('Failed to save comment')
     }
+  }
+
+  function handleReplyClick(commentId) {
+    setReplyingTo(commentId)
+    setShowReplyForm(commentId)
+    setCommentText('')
+    setAuthorName('')
+  }
+
+  function cancelReply() {
+    setReplyingTo(null)
+    setShowReplyForm(null)
+    setCommentText('')
+    setAuthorName('')
+  }
+
+  // Get replies for a comment
+  function getReplies(commentId) {
+    return comments.filter(c => c.parent_comment_id === commentId)
+  }
+
+  // Get top-level comments (no parent)
+  function getTopLevelComments() {
+    return comments.filter(c => !c.parent_comment_id)
   }
 
   function handleMarkerClick(comment, e) {
@@ -149,8 +188,8 @@ export default function CommentSystem() {
         </div>
       )}
 
-      {/* Comment Markers in View Mode */}
-      {viewMode && comments.map((comment) => (
+      {/* Comment Markers in View Mode - only show top-level comments */}
+      {viewMode && getTopLevelComments().map((comment) => (
         <div
           key={comment.id}
           className="comment-marker"
@@ -178,6 +217,13 @@ export default function CommentSystem() {
             <span>Add Comment</span>
             <button onClick={() => setShowPopup(false)} className="close-btn">×</button>
           </div>
+          <input
+            type="text"
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            placeholder="Your name (optional)"
+            className="author-input"
+          />
           <textarea
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
@@ -195,7 +241,7 @@ export default function CommentSystem() {
         </div>
       )}
 
-      {/* View Comment Popup */}
+      {/* View Comment Popup with Replies */}
       {selectedComment && (
         <div
           className="comment-view-popup"
@@ -211,10 +257,67 @@ export default function CommentSystem() {
             <button onClick={closeCommentView} className="close-btn">×</button>
           </div>
           <div className="comment-content">
+            <div className="comment-author">{selectedComment.author_name || 'Anonymous'}</div>
             <p>{selectedComment.comment_text}</p>
             <span className="comment-date">
               {new Date(selectedComment.created_at).toLocaleString()}
             </span>
+
+            {/* Reply Button */}
+            {showReplyForm !== selectedComment.id && (
+              <button
+                className="btn-reply"
+                onClick={() => handleReplyClick(selectedComment.id)}
+              >
+                💬 Reply
+              </button>
+            )}
+
+            {/* Reply Form */}
+            {showReplyForm === selectedComment.id && (
+              <div className="reply-form">
+                <input
+                  type="text"
+                  value={authorName}
+                  onChange={(e) => setAuthorName(e.target.value)}
+                  placeholder="Your name (optional)"
+                  className="author-input"
+                />
+                <textarea
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Write your reply..."
+                  autoFocus
+                  className="reply-textarea"
+                />
+                <div className="reply-actions">
+                  <button onClick={cancelReply} className="btn-cancel">
+                    Cancel
+                  </button>
+                  <button onClick={saveComment} className="btn-save">
+                    Reply
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Display Replies */}
+            {getReplies(selectedComment.id).length > 0 && (
+              <div className="replies-section">
+                <div className="replies-header">
+                  {getReplies(selectedComment.id).length} {getReplies(selectedComment.id).length === 1 ? 'Reply' : 'Replies'}
+                </div>
+                {getReplies(selectedComment.id).map((reply) => (
+                  <div key={reply.id} className="reply-item">
+                    <div className="reply-author">{reply.author_name || 'Anonymous'}</div>
+                    <p className="reply-text">{reply.comment_text}</p>
+                    <span className="reply-date">
+                      {new Date(reply.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
