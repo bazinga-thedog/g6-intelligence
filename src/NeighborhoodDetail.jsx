@@ -1,166 +1,77 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from './supabaseClient'
 import CommentSystem from './CommentSystem'
 import './NeighborhoodDetail.css'
 
 export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
   const [selectedCurrency, setSelectedCurrency] = useState('EUR')
+  const [qolData, setQolData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Quality of life data for neighborhoods
-  const qualityOfLifeData = {
-    // Lisbon neighborhoods
-    'Alfama': {
-      popularityFactors: [
-        'Authentic Portuguese atmosphere with historic charm',
-        'Panoramic views from Miradouros (viewpoints)',
-        'Fado music culture and traditional restaurants',
-        'Walking distance to major tourist attractions',
-        'Strong short-term rental demand',
-        'Unique architectural character'
-      ],
-      amenities: {
-        restaurants: 85,
-        cafes: 42,
-        supermarkets: 8,
-        schools: 5,
-        healthcare: 3,
-        parks: 4
-      },
-      transportation: {
-        metroStations: 0,
-        busLines: 12,
-        tramLines: 2,
-        walkability: 95
-      },
-      lifestyle: {
-        nightlife: 'Moderate',
-        shopping: 'Local boutiques',
-        culture: 'Very High',
-        safety: 'High'
-      }
-    },
-    'Chiado': {
-      popularityFactors: [
-        'Prime central location with luxury shopping',
-        'Cultural hub with theaters and museums',
-        'High-end restaurants and cafes',
-        'Premium architectural heritage',
-        'Wealthy resident demographic',
-        'International business presence'
-      ],
-      amenities: {
-        restaurants: 120,
-        cafes: 68,
-        supermarkets: 12,
-        schools: 8,
-        healthcare: 6,
-        parks: 3
-      },
-      transportation: {
-        metroStations: 2,
-        busLines: 18,
-        tramLines: 3,
-        walkability: 98
-      },
-      lifestyle: {
-        nightlife: 'High',
-        shopping: 'Luxury brands',
-        culture: 'Very High',
-        safety: 'Very High'
-      }
-    },
-    'Dubai Marina': {
-      popularityFactors: [
-        'Waterfront living with marina views',
-        'Modern high-rise apartments',
-        'Beach and water sports access',
-        'International dining and entertainment',
-        'Expat-friendly community',
-        'Premium lifestyle amenities'
-      ],
-      amenities: {
-        restaurants: 200,
-        cafes: 95,
-        supermarkets: 18,
-        schools: 12,
-        healthcare: 8,
-        parks: 6
-      },
-      transportation: {
-        metroStations: 2,
-        busLines: 15,
-        tramLines: 1,
-        walkability: 85
-      },
-      lifestyle: {
-        nightlife: 'Very High',
-        shopping: 'International brands',
-        culture: 'Moderate',
-        safety: 'Very High'
-      }
-    },
-    'Downtown Dubai': {
-      popularityFactors: [
-        'Iconic Burj Khalifa address',
-        'World-class shopping at Dubai Mall',
-        'Premium corporate environment',
-        'Luxury residential towers',
-        'High-profile location prestige',
-        'Maximum rental yield potential'
-      ],
-      amenities: {
-        restaurants: 250,
-        cafes: 110,
-        supermarkets: 15,
-        schools: 10,
-        healthcare: 12,
-        parks: 4
-      },
-      transportation: {
-        metroStations: 3,
-        busLines: 20,
-        tramLines: 0,
-        walkability: 80
-      },
-      lifestyle: {
-        nightlife: 'High',
-        shopping: 'Luxury & International',
-        culture: 'High',
-        safety: 'Very High'
-      }
-    },
-    'Ribeira': {
-      popularityFactors: [
-        'UNESCO World Heritage Site',
-        'Riverside dining and entertainment',
-        'Historic Porto atmosphere',
-        'Tourist hotspot with high occupancy',
-        'Iconic Dom Luís I Bridge views',
-        'Port wine cellars nearby'
-      ],
-      amenities: {
-        restaurants: 95,
-        cafes: 48,
-        supermarkets: 6,
-        schools: 4,
-        healthcare: 3,
-        parks: 5
-      },
-      transportation: {
-        metroStations: 1,
-        busLines: 10,
-        tramLines: 1,
-        walkability: 92
-      },
-      lifestyle: {
-        nightlife: 'High',
-        shopping: 'Local artisans',
-        culture: 'Very High',
-        safety: 'High'
+  // Fetch quality of life data from Supabase
+  useEffect(() => {
+    const fetchQualityOfLife = async () => {
+      if (!neighborhood?.name || !cityName) return
+
+      setLoading(true)
+      setError(null)
+
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('neighborhood_quality_of_life')
+          .select('*')
+          .eq('city_name', cityName)
+          .eq('neighborhood_name', neighborhood.name)
+          .single()
+
+        if (fetchError) {
+          // If no specific data found, use fallback
+          if (fetchError.code === 'PGRST116') {
+            setQolData(getFallbackQolData())
+          } else {
+            throw fetchError
+          }
+        } else {
+          // Transform Supabase data to match component structure
+          setQolData({
+            popularityFactors: data.popularity_factors || [],
+            amenities: {
+              restaurants: data.amenities_restaurants,
+              cafes: data.amenities_cafes,
+              supermarkets: data.amenities_supermarkets,
+              schools: data.amenities_schools,
+              healthcare: data.amenities_healthcare,
+              parks: data.amenities_parks
+            },
+            transportation: {
+              metroStations: data.transport_metro_stations,
+              busLines: data.transport_bus_lines,
+              tramLines: data.transport_tram_lines,
+              walkability: data.transport_walkability
+            },
+            lifestyle: {
+              nightlife: data.lifestyle_nightlife,
+              shopping: data.lifestyle_shopping,
+              culture: data.lifestyle_culture,
+              safety: data.lifestyle_safety
+            }
+          })
+        }
+      } catch (err) {
+        console.error('Error fetching quality of life data:', err)
+        setError(err.message)
+        setQolData(getFallbackQolData())
+      } finally {
+        setLoading(false)
       }
     }
-  }
 
-  const qolData = qualityOfLifeData[neighborhood.name] || {
+    fetchQualityOfLife()
+  }, [neighborhood, cityName])
+
+  // Fallback data for neighborhoods without specific QOL data
+  const getFallbackQolData = () => ({
     popularityFactors: [
       'Prime location with excellent connectivity',
       'Growing neighborhood with modern amenities',
@@ -189,7 +100,8 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
       culture: 'Moderate',
       safety: 'High'
     }
-  }
+  })
+
 
   const formatCurrency = (value, currency) => {
     const symbols = { EUR: '€', USD: '$', GBP: '£' }
@@ -373,12 +285,26 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
         </section>
 
         {/* Why This Neighborhood Section */}
-        <section className="detail-section popularity-section">
-          <h2 className="section-title">Why {neighborhood.name}?</h2>
-          <p className="section-subtitle">Key factors driving rental demand and property values</p>
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            Loading neighborhood details...
+          </div>
+        )}
 
-          <div className="popularity-grid">
-            {qolData.popularityFactors.map((factor, index) => (
+        {error && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#ef4444' }}>
+            Error loading details: {error}
+          </div>
+        )}
+
+        {!loading && qolData && (
+          <>
+            <section className="detail-section popularity-section">
+              <h2 className="section-title">Why {neighborhood.name}?</h2>
+              <p className="section-subtitle">Key factors driving rental demand and property values</p>
+
+              <div className="popularity-grid">
+                {qolData.popularityFactors.map((factor, index) => (
               <div key={index} className="popularity-item">
                 <div className="popularity-icon">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -481,6 +407,8 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
             </div>
           </div>
         </section>
+          </>
+        )}
       </div>
     </div>
   )

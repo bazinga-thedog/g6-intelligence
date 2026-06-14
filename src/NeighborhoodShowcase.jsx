@@ -1,425 +1,119 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from './supabaseClient'
 import CommentSystem from './CommentSystem'
 import './NeighborhoodShowcase.css'
 
 export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborhoodSelect }) {
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState([])
   const [selectedCurrency, setSelectedCurrency] = useState('EUR')
+  const [neighborhoods, setNeighborhoods] = useState([])
+  const [overview, setOverview] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [loadingOverview, setLoadingOverview] = useState(true)
+  const [error, setError] = useState(null)
+  const [overviewError, setOverviewError] = useState(null)
 
-  // City overview data
-  const cityOverview = {
-    'Lisbon': {
-      heroImage: 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=1600&h=600&fit=crop',
-      description: 'Portugal\'s capital combines rich history with modern amenities, offering investors a unique blend of culture and growth potential. The city has seen consistent appreciation driven by international demand, golden visa programs, and a thriving tourism sector.',
-      highlights: [
-        'Growing tech hub with international companies',
-        'Strong short-term rental market',
-        'Golden visa residency program',
-        'Mediterranean lifestyle and climate'
-      ],
-      avgMetrics: {
-        pricePerSqm: {
-          EUR: { min: 4500, max: 7200 },
-          USD: { min: 4900, max: 7800 },
-          GBP: { min: 3900, max: 6200 }
-        },
-        rentalYield: { avg: 5.5 },
-        daysToRent: { avg: 30 },
-        priceGrowth5Y: [9.2, 13.5, 16.8, 20.2, 23.5]
-      }
-    },
-    'Dubai': {
-      heroImage: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&h=600&fit=crop',
-      description: 'A global business and tourism hub, Dubai offers investors tax-free returns, world-class infrastructure, and strong rental yields. The city continues to attract international investors with its strategic location, stability, and ambitious development plans.',
-      highlights: [
-        'Zero property tax and capital gains tax',
-        'High rental yields (6-8% average)',
-        'Strong expat demand and tourism',
-        'World-class infrastructure and connectivity'
-      ],
-      avgMetrics: {
-        pricePerSqm: {
-          EUR: { min: 3200, max: 6800 },
-          USD: { min: 3500, max: 7400 },
-          GBP: { min: 2800, max: 6000 }
-        },
-        rentalYield: { avg: 6.8 },
-        daysToRent: { avg: 24 },
-        priceGrowth5Y: [8.8, 13.2, 18.5, 23.8, 27.5]
-      }
-    },
-    'Porto': {
-      heroImage: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1600&h=600&fit=crop',
-      description: 'Portugal\'s second city has emerged as a prime investment destination, offering excellent value compared to Lisbon while maintaining strong growth potential. The UNESCO World Heritage historic center and vibrant cultural scene attract both tourists and digital nomads.',
-      highlights: [
-        'Lower entry prices than Lisbon',
-        'UNESCO World Heritage historic center',
-        'Growing digital nomad community',
-        'Excellent quality of life'
-      ],
-      avgMetrics: {
-        pricePerSqm: {
-          EUR: { min: 3200, max: 5800 },
-          USD: { min: 3500, max: 6300 },
-          GBP: { min: 2800, max: 5000 }
-        },
-        rentalYield: { avg: 6.2 },
-        daysToRent: { avg: 36 },
-        priceGrowth5Y: [10.5, 15.2, 20.5, 25.8, 30.2]
+  // Fetch city overview from Supabase
+  useEffect(() => {
+    const fetchCityOverview = async () => {
+      if (!selectedCity?.city) return
+
+      setLoadingOverview(true)
+      setOverviewError(null)
+
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('city_overview')
+          .select('*')
+          .eq('city_name', selectedCity.city)
+          .single()
+
+        if (fetchError) throw fetchError
+
+        // Transform Supabase data to match component structure
+        setOverview({
+          heroImage: data.hero_image_url,
+          description: data.description,
+          highlights: data.highlights || [],
+          avgMetrics: {
+            pricePerSqm: {
+              EUR: { min: data.avg_price_per_sqm_eur_min, max: data.avg_price_per_sqm_eur_max },
+              USD: { min: data.avg_price_per_sqm_usd_min, max: data.avg_price_per_sqm_usd_max },
+              GBP: { min: data.avg_price_per_sqm_gbp_min, max: data.avg_price_per_sqm_gbp_max }
+            },
+            rentalYield: { avg: data.avg_rental_yield },
+            daysToRent: { avg: data.avg_days_to_rent },
+            priceGrowth5Y: data.price_growth_5y || []
+          }
+        })
+      } catch (err) {
+        console.error('Error fetching city overview:', err)
+        setOverviewError(err.message)
+      } finally {
+        setLoadingOverview(false)
       }
     }
-  }
 
-  // Mock neighborhood data for each city
-  const neighborhoodData = {
-    'Lisbon': [
-      {
-        id: 1,
-        name: 'Alfama',
-        image: 'https://images.unsplash.com/photo-1585208798174-6cedd86e019a?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 5200, max: 8500 },
-            USD: { min: 5700, max: 9200 },
-            GBP: { min: 4500, max: 7400 }
-          },
-          rentalYield: { min: 5.2, max: 6.8 },
-          daysToRent: { avg: 28 },
-          priceGrowth5Y: [10.5, 14.2, 17.8, 21.5, 24.8],
-          acquisitionTax: 6.5, // percentage
-          avgHoldingTime: 8.5, // years
-          daysAvailableToRent: 22, // days on market
-          rentPerSqm: {
-            EUR: { avg: 18 },
-            USD: { avg: 20 },
-            GBP: { avg: 16 }
-          },
-          rentalGrowth5Y: [4.2, 5.8, 7.5, 9.2, 11.5], // percentage per year
-          avgRentalTime: 14 // months - average lease duration
-        },
-        description: 'Historic neighborhood with cobblestone streets and stunning views'
-      },
-      {
-        id: 2,
-        name: 'Chiado',
-        image: 'https://images.unsplash.com/photo-1588534176924-267bb0020618?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 6500, max: 10200 },
-            USD: { min: 7100, max: 11100 },
-            GBP: { min: 5600, max: 9000 }
-          },
-          rentalYield: { min: 4.8, max: 6.2 },
-          daysToRent: { avg: 22 },
-          priceGrowth5Y: [12.8, 16.5, 19.8, 23.2, 26.5],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 9.2,
-          daysAvailableToRent: 18,
-          rentPerSqm: {
-            EUR: { avg: 22 },
-            USD: { avg: 24 },
-            GBP: { avg: 19 }
-          },
-          rentalGrowth5Y: [5.5, 7.2, 8.8, 10.5, 12.8],
-          avgRentalTime: 12
-        },
-        description: 'Upscale area with luxury shopping and cultural attractions'
-      },
-      {
-        id: 3,
-        name: 'Belém',
-        image: 'https://images.unsplash.com/photo-1581880191784-6c49c98a5af5?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 4800, max: 7200 },
-            USD: { min: 5200, max: 7800 },
-            GBP: { min: 4100, max: 6300 }
-          },
-          rentalYield: { min: 4.5, max: 5.9 },
-          daysToRent: { avg: 35 },
-          priceGrowth5Y: [8.5, 11.8, 15.2, 18.8, 22.1],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 7.8,
-          daysAvailableToRent: 28,
-          rentPerSqm: { EUR: { avg: 15 }, USD: { avg: 16 }, GBP: { avg: 13 } },
-          rentalGrowth5Y: [3.8, 5.2, 6.8, 8.5, 10.2],
-          avgRentalTime: 15
-        },
-        description: 'Riverside district with historic monuments and parks'
-      },
-      {
-        id: 4,
-        name: 'Parque das Nações',
-        image: 'https://images.unsplash.com/photo-1598990386997-48fd3f8d6e23?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 4200, max: 6500 },
-            USD: { min: 4600, max: 7100 },
-            GBP: { min: 3600, max: 5600 }
-          },
-          rentalYield: { min: 5.5, max: 7.2 },
-          daysToRent: { avg: 25 },
-          priceGrowth5Y: [9.2, 13.5, 17.2, 20.8, 24.5],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 6.5,
-          daysAvailableToRent: 20,
-          rentPerSqm: { EUR: { avg: 16 }, USD: { avg: 17 }, GBP: { avg: 14 } },
-          rentalGrowth5Y: [4.5, 6.2, 7.8, 9.5, 11.8],
-          avgRentalTime: 13
-        },
-        description: 'Modern waterfront area with contemporary architecture'
-      },
-      {
-        id: 5,
-        name: 'Príncipe Real',
-        image: 'https://images.unsplash.com/photo-1599982699571-e8e6c8e4bfbb?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 5800, max: 9200 },
-            USD: { min: 6300, max: 10000 },
-            GBP: { min: 5000, max: 8000 }
-          },
-          rentalYield: { min: 4.2, max: 5.8 },
-          daysToRent: { avg: 30 },
-          priceGrowth5Y: [11.5, 15.8, 19.5, 22.8, 26.2],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 8.8,
-          daysAvailableToRent: 25,
-          rentPerSqm: { EUR: { avg: 20 }, USD: { avg: 22 }, GBP: { avg: 17 } },
-          rentalGrowth5Y: [5.2, 6.8, 8.5, 10.2, 12.5],
-          avgRentalTime: 12
-        },
-        description: 'Trendy neighborhood with garden squares and boutiques'
-      },
-      {
-        id: 6,
-        name: 'Santos',
-        image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 5000, max: 7800 },
-            USD: { min: 5400, max: 8500 },
-            GBP: { min: 4300, max: 6800 }
-          },
-          rentalYield: { min: 5.0, max: 6.5 },
-          daysToRent: { avg: 32 },
-          priceGrowth5Y: [9.8, 13.2, 16.8, 20.2, 23.8],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 7.5,
-          daysAvailableToRent: 26,
-          rentPerSqm: { EUR: { avg: 17 }, USD: { avg: 18 }, GBP: { avg: 15 } },
-          rentalGrowth5Y: [4.8, 6.5, 8.2, 10.0, 11.8],
-          avgRentalTime: 14
-        },
-        description: 'Bohemian area with nightlife and creative scene'
-      }
-    ],
-    'Dubai': [
-      {
-        id: 1,
-        name: 'Dubai Marina',
-        image: 'https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 4500, max: 8200 },
-            USD: { min: 4900, max: 8900 },
-            GBP: { min: 3900, max: 7200 }
-          },
-          rentalYield: { min: 6.5, max: 8.2 },
-          daysToRent: { avg: 20 },
-          priceGrowth5Y: [8.5, 12.8, 18.5, 24.2, 28.5],
-          acquisitionTax: 4.0,
-          avgHoldingTime: 5.5,
-          daysAvailableToRent: 15,
-          rentPerSqm: { EUR: { avg: 24 }, USD: { avg: 26 }, GBP: { avg: 21 } },
-          rentalGrowth5Y: [6.5, 8.8, 11.5, 14.2, 16.8],
-          avgRentalTime: 11
-        },
-        description: 'Waterfront living with stunning skyline views'
-      },
-      {
-        id: 2,
-        name: 'Downtown Dubai',
-        image: 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 6200, max: 11500 },
-            USD: { min: 6700, max: 12500 },
-            GBP: { min: 5400, max: 10100 }
-          },
-          rentalYield: { min: 5.2, max: 7.0 },
-          daysToRent: { avg: 18 },
-          priceGrowth5Y: [10.2, 15.5, 20.8, 25.2, 29.8],
-          acquisitionTax: 4.0,
-          avgHoldingTime: 6.2,
-          daysAvailableToRent: 12,
-          rentPerSqm: { EUR: { avg: 28 }, USD: { avg: 30 }, GBP: { avg: 24 } },
-          rentalGrowth5Y: [5.8, 7.8, 10.5, 13.2, 15.8],
-          avgRentalTime: 12
-        },
-        description: 'Iconic location with Burj Khalifa and Dubai Mall'
-      },
-      {
-        id: 3,
-        name: 'Palm Jumeirah',
-        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 7500, max: 15000 },
-            USD: { min: 8100, max: 16300 },
-            GBP: { min: 6500, max: 13100 }
-          },
-          rentalYield: { min: 4.8, max: 6.5 },
-          daysToRent: { avg: 25 },
-          priceGrowth5Y: [12.5, 16.8, 21.5, 26.8, 31.2],
-          acquisitionTax: 4.0,
-          avgHoldingTime: 7.8,
-          daysAvailableToRent: 18,
-          rentPerSqm: { EUR: { avg: 35 }, USD: { avg: 38 }, GBP: { avg: 30 } },
-          rentalGrowth5Y: [7.2, 9.5, 12.5, 15.2, 18.5],
-          avgRentalTime: 11
-        },
-        description: 'Exclusive island with luxury beachfront properties'
-      },
-      {
-        id: 4,
-        name: 'Business Bay',
-        image: 'https://images.unsplash.com/photo-1512632578888-169bbbc64f33?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 3800, max: 6500 },
-            USD: { min: 4100, max: 7100 },
-            GBP: { min: 3300, max: 5700 }
-          },
-          rentalYield: { min: 7.0, max: 9.2 },
-          daysToRent: { avg: 22 },
-          priceGrowth5Y: [7.2, 11.5, 16.8, 22.5, 26.8],
-          acquisitionTax: 4.0,
-          avgHoldingTime: 4.8,
-          daysAvailableToRent: 16,
-          rentPerSqm: { EUR: { avg: 22 }, USD: { avg: 24 }, GBP: { avg: 19 } },
-          rentalGrowth5Y: [7.8, 10.2, 13.5, 16.8, 19.5],
-          avgRentalTime: 12
-        },
-        description: 'Central business district with modern high-rises'
-      },
-      {
-        id: 5,
-        name: 'Jumeirah Beach Residence',
-        image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 5200, max: 9200 },
-            USD: { min: 5700, max: 10000 },
-            GBP: { min: 4500, max: 8000 }
-          },
-          rentalYield: { min: 6.2, max: 7.8 },
-          daysToRent: { avg: 24 },
-          priceGrowth5Y: [9.5, 14.2, 19.5, 24.8, 29.2],
-          acquisitionTax: 4.0,
-          avgHoldingTime: 5.8,
-          daysAvailableToRent: 17,
-          rentPerSqm: { EUR: { avg: 26 }, USD: { avg: 28 }, GBP: { avg: 22 } },
-          rentalGrowth5Y: [6.8, 9.2, 12.2, 15.5, 18.2],
-          avgRentalTime: 11
-        },
-        description: 'Beachfront community with resort-style living'
-      }
-    ],
-    'Porto': [
-      {
-        id: 1,
-        name: 'Ribeira',
-        image: 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 4200, max: 7200 },
-            USD: { min: 4600, max: 7800 },
-            GBP: { min: 3600, max: 6300 }
-          },
-          rentalYield: { min: 6.2, max: 8.0 },
-          daysToRent: { avg: 30 },
-          priceGrowth5Y: [12.5, 18.2, 22.8, 27.5, 32.8],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 7.2,
-          daysAvailableToRent: 24,
-          rentPerSqm: { EUR: { avg: 19 }, USD: { avg: 21 }, GBP: { avg: 16 } },
-          rentalGrowth5Y: [6.2, 8.5, 11.2, 14.5, 17.8],
-          avgRentalTime: 13
-        },
-        description: 'UNESCO World Heritage riverside district'
-      },
-      {
-        id: 2,
-        name: 'Foz do Douro',
-        image: 'https://images.unsplash.com/photo-1583937443569-d9be3cddf402?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 5500, max: 9200 },
-            USD: { min: 6000, max: 10000 },
-            GBP: { min: 4800, max: 8000 }
-          },
-          rentalYield: { min: 4.8, max: 6.2 },
-          daysToRent: { avg: 35 },
-          priceGrowth5Y: [10.2, 15.8, 20.5, 25.2, 29.8],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 9.5,
-          daysAvailableToRent: 28,
-          rentPerSqm: { EUR: { avg: 22 }, USD: { avg: 24 }, GBP: { avg: 19 } },
-          rentalGrowth5Y: [4.8, 6.8, 9.2, 11.8, 14.5],
-          avgRentalTime: 14
-        },
-        description: 'Coastal neighborhood with beaches and seafood restaurants'
-      },
-      {
-        id: 3,
-        name: 'Boavista',
-        image: 'https://images.unsplash.com/photo-1562095241-8c6714fd4178?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 3800, max: 6200 },
-            USD: { min: 4100, max: 6700 },
-            GBP: { min: 3300, max: 5400 }
-          },
-          rentalYield: { min: 5.5, max: 7.2 },
-          daysToRent: { avg: 38 },
-          priceGrowth5Y: [9.5, 14.8, 19.2, 24.5, 28.8],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 6.8,
-          daysAvailableToRent: 30,
-          rentPerSqm: { EUR: { avg: 16 }, USD: { avg: 17 }, GBP: { avg: 14 } },
-          rentalGrowth5Y: [5.5, 7.5, 9.8, 12.5, 15.2],
-          avgRentalTime: 13
-        },
-        description: 'Modern area with shopping and business centers'
-      },
-      {
-        id: 4,
-        name: 'Cedofeita',
-        image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800',
-        metrics: {
-          pricePerSqm: {
-            EUR: { min: 3200, max: 5500 },
-            USD: { min: 3500, max: 6000 },
-            GBP: { min: 2800, max: 4800 }
-          },
-          rentalYield: { min: 6.0, max: 7.5 },
-          daysToRent: { avg: 40 },
-          priceGrowth5Y: [8.8, 13.5, 18.8, 23.2, 27.5],
-          acquisitionTax: 6.5,
-          avgHoldingTime: 6.2,
-          daysAvailableToRent: 32,
-          rentPerSqm: { EUR: { avg: 14 }, USD: { avg: 15 }, GBP: { avg: 12 } },
-          rentalGrowth5Y: [5.2, 7.2, 9.5, 12.2, 14.8],
-          avgRentalTime: 14
-        },
-        description: 'Artistic neighborhood with galleries and cultural venues'
-      }
-    ]
-  }
+    fetchCityOverview()
+  }, [selectedCity])
 
-  const neighborhoods = neighborhoodData[selectedCity?.city] || []
-  const overview = cityOverview[selectedCity?.city]
+  // Fetch neighborhoods from Supabase
+  useEffect(() => {
+    const fetchNeighborhoods = async () => {
+      if (!selectedCity?.city) return
+
+      setLoading(true)
+      setError(null)
+
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('neighborhoods')
+          .select('*')
+          .eq('city_name', selectedCity.city)
+          .order('name')
+
+        if (fetchError) throw fetchError
+
+        // Transform Supabase data to match existing component structure
+        const transformedData = data.map(n => ({
+          id: n.id,
+          name: n.name,
+          image: n.image_url,
+          metrics: {
+            pricePerSqm: {
+              EUR: { min: n.price_per_sqm_eur_min, max: n.price_per_sqm_eur_max },
+              USD: { min: n.price_per_sqm_usd_min, max: n.price_per_sqm_usd_max },
+              GBP: { min: n.price_per_sqm_gbp_min, max: n.price_per_sqm_gbp_max }
+            },
+            rentalYield: { min: n.rental_yield_min, max: n.rental_yield_max },
+            daysToRent: { avg: n.days_to_rent_avg },
+            priceGrowth5Y: n.price_growth_5y,
+            acquisitionTax: n.acquisition_tax,
+            avgHoldingTime: n.avg_holding_time,
+            daysAvailableToRent: n.days_available_to_rent,
+            rentPerSqm: {
+              EUR: { avg: n.rent_per_sqm_eur },
+              USD: { avg: n.rent_per_sqm_usd },
+              GBP: { avg: n.rent_per_sqm_gbp }
+            },
+            rentalGrowth5Y: n.rental_growth_5y,
+            avgRentalTime: n.avg_rental_time
+          },
+          description: n.description
+        }))
+
+        setNeighborhoods(transformedData)
+      } catch (err) {
+        console.error('Error fetching neighborhoods:', err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNeighborhoods()
+  }, [selectedCity])
+
 
   // Metric explanations for tooltips
   const metricExplanations = {
@@ -515,7 +209,19 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
       </div>
 
       {/* City Overview Banner */}
-      {overview && (
+      {loadingOverview && (
+        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+          Loading city overview...
+        </div>
+      )}
+
+      {overviewError && (
+        <div style={{ textAlign: 'center', padding: '40px', color: '#ef4444' }}>
+          Error loading city overview: {overviewError}
+        </div>
+      )}
+
+      {!loadingOverview && overview && (
         <div className="city-overview">
           <div className="city-hero-image">
             <img src={overview.heroImage} alt={selectedCity?.city} />
@@ -634,6 +340,24 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
 
       {/* Neighborhood Cards Grid */}
       <div className="showcase-content">
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            Loading neighborhoods...
+          </div>
+        )}
+
+        {error && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#ef4444' }}>
+            Error loading neighborhoods: {error}
+          </div>
+        )}
+
+        {!loading && !error && neighborhoods.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+            No neighborhoods found for {selectedCity?.city}
+          </div>
+        )}
+
         <div className="locations-grid">
           {neighborhoods.map((neighborhood) => (
             <div
