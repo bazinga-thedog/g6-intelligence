@@ -3,6 +3,7 @@ import LandingPage from './LandingPage'
 import LocationShowcase from './LocationShowcase'
 import NeighborhoodShowcase from './NeighborhoodShowcase'
 import NeighborhoodDetail from './NeighborhoodDetail'
+import InvestmentDetails from './InvestmentDetails'
 import './App.css'
 
 function AppRoutes() {
@@ -61,6 +62,10 @@ function AppRoutes() {
             onBack={handleBackToNeighborhoods}
           />
         }
+      />
+      <Route
+        path="/neighborhoods/:cityName/:neighborhoodName/investment"
+        element={<InvestmentDetails />}
       />
     </Routes>
   )

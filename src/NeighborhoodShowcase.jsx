@@ -16,7 +16,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   const [error, setError] = useState(null)
   const [overviewError, setOverviewError] = useState(null)
 
-  // Fetch city overview from Supabase
+  // Fetch city overview from investment_locations (merged table)
   useEffect(() => {
     const fetchCityOverview = async () => {
       if (!cityToUse?.city) return
@@ -26,9 +26,9 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
 
       try {
         const { data, error: fetchError } = await supabase
-          .from('city_overview')
+          .from('investment_locations')
           .select('*')
-          .eq('city_name', cityToUse.city)
+          .eq('city', cityToUse.city)
           .single()
 
         if (fetchError) throw fetchError
@@ -40,12 +40,12 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
           highlights: data.highlights || [],
           avgMetrics: {
             pricePerSqm: {
-              EUR: { min: data.avg_price_per_sqm_eur_min, max: data.avg_price_per_sqm_eur_max },
-              USD: { min: data.avg_price_per_sqm_usd_min, max: data.avg_price_per_sqm_usd_max },
-              GBP: { min: data.avg_price_per_sqm_gbp_min, max: data.avg_price_per_sqm_gbp_max }
+              EUR: { min: data.price_per_sqm_eur_min, max: data.price_per_sqm_eur_max },
+              USD: { min: data.price_per_sqm_usd_min, max: data.price_per_sqm_usd_max },
+              GBP: { min: data.price_per_sqm_gbp_min, max: data.price_per_sqm_gbp_max }
             },
-            rentalYield: { avg: data.avg_rental_yield },
-            daysToRent: { avg: data.avg_days_to_rent },
+            rentalYield: { avg: ((data.rental_yield_min + data.rental_yield_max) / 2) },
+            daysToRent: { avg: data.days_to_rent_avg },
             priceGrowth5Y: data.price_growth_5y || []
           }
         })

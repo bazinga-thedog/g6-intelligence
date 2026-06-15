@@ -456,3 +456,101 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Investment CTA Card */
+.investment-cta-card {
+  margin-top: 3rem;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.08) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  transition: all 0.3s ease;
+}
+
+.investment-cta-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.1) 100%);
+  transform: translateY(-2px);
+}
+
+.investment-cta-final {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.cta-content {
+  flex: 1;
+}
+
+.cta-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.cta-description {
+  font-size: 1rem;
+  color: #9ca3af;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cta-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.cta-button:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+  transform: translateX(4px);
+}
+
+.cta-button svg {
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover svg {
+  transform: translateX(4px);
+}
+
+/* Responsive CTA */
+@media (max-width: 768px) {
+  .investment-cta-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .cta-title {
+    font-size: 1.25rem;
+  }
+
+  .cta-description {
+    font-size: 0.95rem;
+  }
+
+  .cta-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
