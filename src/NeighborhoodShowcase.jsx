@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import CommentSystem from './CommentSystem'
 import './NeighborhoodShowcase.css'
 
 export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborhoodSelect }) {
+  const { cityName } = useParams()
+  const cityToUse = selectedCity || { city: cityName }
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState([])
   const [selectedCurrency, setSelectedCurrency] = useState('EUR')
   const [neighborhoods, setNeighborhoods] = useState([])
@@ -16,7 +19,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   // Fetch city overview from Supabase
   useEffect(() => {
     const fetchCityOverview = async () => {
-      if (!selectedCity?.city) return
+      if (!cityToUse?.city) return
 
       setLoadingOverview(true)
       setOverviewError(null)
@@ -25,7 +28,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
         const { data, error: fetchError } = await supabase
           .from('city_overview')
           .select('*')
-          .eq('city_name', selectedCity.city)
+          .eq('city_name', cityToUse.city)
           .single()
 
         if (fetchError) throw fetchError
@@ -55,12 +58,12 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     }
 
     fetchCityOverview()
-  }, [selectedCity])
+  }, [cityToUse])
 
   // Fetch neighborhoods from Supabase
   useEffect(() => {
     const fetchNeighborhoods = async () => {
-      if (!selectedCity?.city) return
+      if (!cityToUse?.city) return
 
       setLoading(true)
       setError(null)
@@ -69,7 +72,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
         const { data, error: fetchError } = await supabase
           .from('neighborhoods')
           .select('*')
-          .eq('city_name', selectedCity.city)
+          .eq('city_name', cityToUse.city)
           .order('name')
 
         if (fetchError) throw fetchError
@@ -112,7 +115,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     }
 
     fetchNeighborhoods()
-  }, [selectedCity])
+  }, [cityToUse])
 
 
   // Metric explanations for tooltips
@@ -193,7 +196,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
 
   return (
     <div className="neighborhood-showcase">
-      <CommentSystem pageId={`neighborhoods-${selectedCity?.city || 'unknown'}`} />
+      <CommentSystem pageId={`neighborhoods-${cityToUse?.city || 'unknown'}`} />
 
       {/* Navigation Header */}
       <div className="showcase-nav">
@@ -224,15 +227,15 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
       {!loadingOverview && overview && (
         <div className="city-overview">
           <div className="city-hero-image">
-            <img src={overview.heroImage} alt={selectedCity?.city} />
+            <img src={overview.heroImage} alt={cityToUse?.city} />
             <div className="city-hero-overlay"></div>
           </div>
 
           <div className="city-overview-content">
             <div className="city-header">
               <div>
-                <h1 className="city-title">{selectedCity?.city}</h1>
-                <p className="city-country">{selectedCity?.country}</p>
+                <h1 className="city-title">{cityToUse?.city}</h1>
+                <p className="city-country">{cityToUse?.country}</p>
               </div>
               <button className="download-report-btn" onClick={handleDownloadReport}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -334,7 +337,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
       <div className="neighborhoods-header">
         <h2 className="neighborhoods-title">Explore Neighborhoods</h2>
         <p className="neighborhoods-subtitle">
-          Select neighborhoods to compare opportunities within {selectedCity?.city}
+          Select neighborhoods to compare opportunities within {cityToUse?.city}
         </p>
       </div>
 
@@ -354,7 +357,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
 
         {!loading && !error && neighborhoods.length === 0 && (
           <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-            No neighborhoods found for {selectedCity?.city}
+            No neighborhoods found for {cityToUse?.city}
           </div>
         )}
 
