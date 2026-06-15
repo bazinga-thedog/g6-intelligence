@@ -427,14 +427,8 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
                     <div className="metric-value">{neighborhood.metrics.avgHoldingTime}y</div>
                   </div>
                   <div className="metric-secondary">
-                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.daysAvailableToRent}>
-                      Days Available
-                    </div>
-                    <div className="metric-value">{neighborhood.metrics.daysAvailableToRent}d</div>
-                  </div>
-                  <div className="metric-secondary">
                     <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.rentPerSqm}>
-                      Rent/sqm
+                      Rent/m<sup>2</sup>
                     </div>
                     <div className="metric-value">
                       {formatCurrency(neighborhood.metrics.rentPerSqm[selectedCurrency].avg, selectedCurrency)}
