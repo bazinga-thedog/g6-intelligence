@@ -554,3 +554,130 @@
     justify-content: center;
   }
 }
+
+/* Property Listings Section */
+.properties-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.property-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.property-image {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+}
+
+.property-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(99, 102, 241, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.property-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.property-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.property-type {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.property-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4a90e2;
+}
+
+.property-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.property-spec {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.property-spec svg {
+  flex-shrink: 0;
+  color: #6b7280;
+}
+
+.property-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.highlight-tag {
+  padding: 0.375rem 0.75rem;
+  background: rgba(74, 144, 226, 0.15);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #4a90e2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Responsive Property Grid */
+@media (max-width: 1024px) {
+  .properties-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .property-image {
+    height: 200px;
+  }
+
+  .property-specs {
+    grid-template-columns: 1fr;
+  }
+
+  .property-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

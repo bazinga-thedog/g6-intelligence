@@ -502,9 +502,9 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
           </div>
         </section>
 
-        {/* CTA - Second Position (End of Page) */}
+        {/* CTA - Before Properties */}
         <section className="detail-section">
-          <div className="investment-cta-card investment-cta-final">
+          <div className="investment-cta-card">
             <div className="cta-content">
               <h3 className="cta-title">Interested in investing in {neighborhood.name}?</h3>
               <p className="cta-description">
@@ -523,6 +523,183 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
                 <polyline points="12 5 19 12 12 19"/>
               </svg>
             </button>
+          </div>
+        </section>
+
+        {/* Property Listings Section */}
+        <section className="detail-section">
+          <h2 className="section-title">Featured Properties in {neighborhood.name}</h2>
+          <p className="section-subtitle">Current investment opportunities with strong potential returns</p>
+
+          <div className="properties-grid">
+            {/* Property 1 */}
+            <div className="property-card">
+              <div className="property-image">
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&auto=format&fit=crop" alt="Modern apartment interior" />
+                <div className="property-badge">New Listing</div>
+              </div>
+              <div className="property-content">
+                <div className="property-header">
+                  <div className="property-type">2-Bedroom Apartment</div>
+                  <div className="property-price">
+                    {formatCurrency(385000, selectedCurrency)} - {formatCurrency(462000, selectedCurrency)}
+                  </div>
+                </div>
+                <div className="property-specs">
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="9" y1="3" x2="9" y2="21"/>
+                    </svg>
+                    <span>92 m²</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    <span>2 bed</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="8" width="18" height="12" rx="2"/>
+                      <path d="M7 16h10"/>
+                    </svg>
+                    <span>1 bath</span>
+                  </div>
+                </div>
+                <div className="property-highlights">
+                  <span className="highlight-tag">Renovated</span>
+                  <span className="highlight-tag">Balcony</span>
+                  <span className="highlight-tag">Good Transport</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Property 2 */}
+            <div className="property-card">
+              <div className="property-image">
+                <img src="https://images.unsplash.com/photo-1502672260066-6bc35f0a1b2d?w=800&auto=format&fit=crop" alt="Bright living room with natural light" />
+              </div>
+              <div className="property-content">
+                <div className="property-header">
+                  <div className="property-type">1-Bedroom Apartment</div>
+                  <div className="property-price">
+                    {formatCurrency(265000, selectedCurrency)} - {formatCurrency(318000, selectedCurrency)}
+                  </div>
+                </div>
+                <div className="property-specs">
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="9" y1="3" x2="9" y2="21"/>
+                    </svg>
+                    <span>68 m²</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    <span>1 bed</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="8" width="18" height="12" rx="2"/>
+                      <path d="M7 16h10"/>
+                    </svg>
+                    <span>1 bath</span>
+                  </div>
+                </div>
+                <div className="property-highlights">
+                  <span className="highlight-tag">Move-in Ready</span>
+                  <span className="highlight-tag">High Demand</span>
+                  <span className="highlight-tag">Low Condo Fees</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Property 3 */}
+            <div className="property-card">
+              <div className="property-image">
+                <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&auto=format&fit=crop" alt="Spacious bedroom with modern design" />
+              </div>
+              <div className="property-content">
+                <div className="property-header">
+                  <div className="property-type">3-Bedroom Apartment</div>
+                  <div className="property-price">
+                    {formatCurrency(520000, selectedCurrency)} - {formatCurrency(624000, selectedCurrency)}
+                  </div>
+                </div>
+                <div className="property-specs">
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="9" y1="3" x2="9" y2="21"/>
+                    </svg>
+                    <span>125 m²</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    <span>3 bed</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="8" width="18" height="12" rx="2"/>
+                      <path d="M7 16h10"/>
+                    </svg>
+                    <span>2 bath</span>
+                  </div>
+                </div>
+                <div className="property-highlights">
+                  <span className="highlight-tag">Family Friendly</span>
+                  <span className="highlight-tag">Parking Included</span>
+                  <span className="highlight-tag">Near Schools</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Property 4 */}
+            <div className="property-card">
+              <div className="property-image">
+                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&fit=crop" alt="Contemporary apartment with open plan" />
+              </div>
+              <div className="property-content">
+                <div className="property-header">
+                  <div className="property-type">Studio Apartment</div>
+                  <div className="property-price">
+                    {formatCurrency(195000, selectedCurrency)} - {formatCurrency(234000, selectedCurrency)}
+                  </div>
+                </div>
+                <div className="property-specs">
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="9" y1="3" x2="9" y2="21"/>
+                    </svg>
+                    <span>45 m²</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    <span>Studio</span>
+                  </div>
+                  <div className="property-spec">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="8" width="18" height="12" rx="2"/>
+                      <path d="M7 16h10"/>
+                    </svg>
+                    <span>1 bath</span>
+                  </div>
+                </div>
+                <div className="property-highlights">
+                  <span className="highlight-tag">High ROI</span>
+                  <span className="highlight-tag">Quick Rental</span>
+                  <span className="highlight-tag">Modern Finishes</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
           </>

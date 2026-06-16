@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import ConversionModal from './ConversionModal'
 import './InvestmentDetails.css'
 
 export default function InvestmentDetails() {
@@ -11,6 +12,9 @@ export default function InvestmentDetails() {
 
   const [activePhase, setActivePhase] = useState(null)
   const [activeSubStep, setActiveSubStep] = useState(null)
+  const [closingSubStep, setClosingSubStep] = useState(null)
+  const [showConversionModal, setShowConversionModal] = useState(false)
+  const [modalContext, setModalContext] = useState(null)
 
   // Scroll to top when page loads
   useEffect(() => {
@@ -30,10 +34,15 @@ export default function InvestmentDetails() {
           title: 'Sourcing',
           description: 'Identify and evaluate potential properties',
           activities: [
-            { title: 'Market Research', description: 'Analyze neighborhood trends, pricing, and demand', duration: '1-2 weeks' },
-            { title: 'Property Search', description: 'Browse listings, attend viewings, shortlist options', duration: '2-4 weeks' },
-            { title: 'Initial Screening', description: 'Check property basics, legal status, and title', duration: '3-5 days' },
-            { title: 'Financial Pre-Qualification', description: 'Secure mortgage pre-approval if financing', duration: '1-2 weeks' }
+            {
+              title: 'Property Search',
+              description: 'Browse available properties using trusted online real estate portals, work with renowned local real estate agents, or explore off-market opportunities through direct outreach. Define your criteria upfront: neighborhood, property type (apartment, villa), size, budget range, and desired rental yield. You can do this independently using listing websites, but working with verified local agents familiar with the neighborhood can provide access to properties before they are publicly listed and offer insights on pricing trends. Consider viewing 5-10 properties to understand the market before making decisions.',
+              cta: {
+                text: 'Help me find verified brokers',
+                type: 'lead_gen',
+                service: 'broker_connection'
+              }
+            }
           ]
         },
         {
@@ -198,8 +207,13 @@ export default function InvestmentDetails() {
 
   const handleSubStepClick = (subStepId) => {
     if (activeSubStep === subStepId) {
-      setActiveSubStep(null)
+      setClosingSubStep(subStepId)
+      setTimeout(() => {
+        setActiveSubStep(null)
+        setClosingSubStep(null)
+      }, 400)
     } else {
+      setClosingSubStep(null)
       setActiveSubStep(subStepId)
     }
   }
@@ -327,18 +341,6 @@ export default function InvestmentDetails() {
         {/* Expanded Phase Roadmap - Vertical */}
         {activePhase && (
           <div className="phase-roadmap-expanded">
-            <div className="phase-roadmap-header">
-              <h3 className="phase-roadmap-title">
-                {roadmapData[activePhase].title} Roadmap
-              </h3>
-              <button className="phase-roadmap-close" onClick={() => setActivePhase(null)}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
-
             {/* Vertical Sub-steps Accordion */}
             <div className="substeps-vertical">
               {roadmapData[activePhase].subSteps.map((subStep, subIndex) => (
@@ -365,33 +367,59 @@ export default function InvestmentDetails() {
                   </div>
 
                   {/* Activities - Expanded when active */}
-                  {activeSubStep === subStep.id && (
-                    <div className="activities-accordion-content">
+                  {(activeSubStep === subStep.id || closingSubStep === subStep.id) && (
+                    <div className={`activities-accordion-content ${closingSubStep === subStep.id ? 'closing' : ''}`}>
                       {/* Example: First 2 activities in parallel (first sub-step only) */}
                       {subIndex === 0 && subStep.activities.length >= 2 && (
                         <div className="activities-parallel-row">
                           <div className="activity-accordion-item parallel">
-                            <div className="activity-accordion-icon">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                              </svg>
-                            </div>
+                            <div className="activity-accordion-bullet"></div>
                             <div className="activity-accordion-details">
                               <h5 className="activity-accordion-title">{subStep.activities[0].title}</h5>
                               <p className="activity-accordion-description">{subStep.activities[0].description}</p>
-                              <span className="activity-accordion-duration">{subStep.activities[0].duration}</span>
+                              {subStep.activities[0].duration && (
+                                <span className="activity-accordion-duration">{subStep.activities[0].duration}</span>
+                              )}
+                              {subStep.activities[0].cta && (
+                                <button
+                                  className="activity-cta-button"
+                                  onClick={() => {
+                                    setModalContext(subStep.activities[0].cta)
+                                    setShowConversionModal(true)
+                                  }}
+                                >
+                                  {subStep.activities[0].cta.text}
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                  </svg>
+                                </button>
+                              )}
                             </div>
                           </div>
                           <div className="activity-accordion-item parallel">
-                            <div className="activity-accordion-icon">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                              </svg>
-                            </div>
+                            <div className="activity-accordion-bullet"></div>
                             <div className="activity-accordion-details">
                               <h5 className="activity-accordion-title">{subStep.activities[1].title}</h5>
                               <p className="activity-accordion-description">{subStep.activities[1].description}</p>
-                              <span className="activity-accordion-duration">{subStep.activities[1].duration}</span>
+                              {subStep.activities[1].duration && (
+                                <span className="activity-accordion-duration">{subStep.activities[1].duration}</span>
+                              )}
+                              {subStep.activities[1].cta && (
+                                <button
+                                  className="activity-cta-button"
+                                  onClick={() => {
+                                    setModalContext(subStep.activities[1].cta)
+                                    setShowConversionModal(true)
+                                  }}
+                                >
+                                  {subStep.activities[1].cta.text}
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                  </svg>
+                                </button>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -399,20 +427,33 @@ export default function InvestmentDetails() {
 
                       {/* Remaining activities (sequential) */}
                       {subStep.activities.map((activity, actIndex) => {
-                        // Skip first 2 activities in first sub-step (they're in parallel row)
-                        if (subIndex === 0 && actIndex < 2) return null
+                        // Skip first 2 activities in first sub-step if they were shown in parallel row
+                        if (subIndex === 0 && subStep.activities.length >= 2 && actIndex < 2) return null
 
                         return (
                           <div key={actIndex} className="activity-accordion-item">
-                            <div className="activity-accordion-icon">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                              </svg>
-                            </div>
+                            <div className="activity-accordion-bullet"></div>
                             <div className="activity-accordion-details">
                               <h5 className="activity-accordion-title">{activity.title}</h5>
                               <p className="activity-accordion-description">{activity.description}</p>
-                              <span className="activity-accordion-duration">{activity.duration}</span>
+                              {activity.duration && (
+                                <span className="activity-accordion-duration">{activity.duration}</span>
+                              )}
+                              {activity.cta && (
+                                <button
+                                  className="activity-cta-button"
+                                  onClick={() => {
+                                    setModalContext(activity.cta)
+                                    setShowConversionModal(true)
+                                  }}
+                                >
+                                  {activity.cta.text}
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                  </svg>
+                                </button>
+                              )}
                             </div>
                           </div>
                         )
@@ -445,6 +486,13 @@ export default function InvestmentDetails() {
           </svg>
         </button>
       </div>
+
+      {/* Conversion Modal */}
+      <ConversionModal
+        isOpen={showConversionModal}
+        onClose={() => setShowConversionModal(false)}
+        context={modalContext}
+      />
     </div>
   )
 }
