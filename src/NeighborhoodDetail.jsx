@@ -508,7 +508,7 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
             <div className="cta-content">
               <h3 className="cta-title">Interested in investing in {neighborhood.name}?</h3>
               <p className="cta-description">
-                Discover the complete financial picture—from acquisition and holding costs to expected returns and exit strategy
+                Discover the complete financial picture, from acquisition and holding costs to expected returns and exit strategy
               </p>
             </div>
             <button

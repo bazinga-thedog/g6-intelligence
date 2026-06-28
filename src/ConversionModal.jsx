@@ -127,7 +127,7 @@ export default function ConversionModal({ isOpen, onClose, context }) {
             </p>
             <div className="conversion-pricing-note">
               <p>Annual fee of €1,180 includes complete investment support throughout the acquisition or sale process.</p>
-              <p className="conversion-pricing-highlight">Upon successful close, we charge 1% commission, with your annual fee fully deducted from this amount.</p>
+              <p className="conversion-pricing-highlight">Upon successful close, we charge an additional 1% commission on the transaction value.</p>
             </div>
 
             <div className="conversion-benefits">
@@ -165,7 +165,7 @@ export default function ConversionModal({ isOpen, onClose, context }) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                <span>Only 1% commission on success</span>
+                <span>1% commission on successful close</span>
               </div>
             </div>
 
