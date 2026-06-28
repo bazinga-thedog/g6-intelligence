@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './ConversionModal.css'
 
 export default function ConversionModal({ isOpen, onClose, context }) {
+  const navigate = useNavigate()
+
   if (!isOpen) return null
 
   const handleMonthlySubmit = () => {
@@ -10,8 +13,9 @@ export default function ConversionModal({ isOpen, onClose, context }) {
   }
 
   const handleFullServiceSubmit = () => {
-    // TODO: Handle full service request
-    console.log('Full service request')
+    // Navigate to scheduling page
+    onClose()
+    navigate('/schedule-consultation')
   }
 
   return (

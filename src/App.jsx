@@ -4,6 +4,8 @@ import LocationShowcase from './LocationShowcase'
 import NeighborhoodShowcase from './NeighborhoodShowcase'
 import NeighborhoodDetail from './NeighborhoodDetail'
 import InvestmentDetails from './InvestmentDetails'
+import ScheduleConsultation from './ScheduleConsultation'
+import ConsultationConfirmation from './ConsultationConfirmation'
 import './App.css'
 
 function AppRoutes() {
@@ -66,6 +68,14 @@ function AppRoutes() {
       <Route
         path="/neighborhoods/:cityName/:neighborhoodName/investment"
         element={<InvestmentDetails />}
+      />
+      <Route
+        path="/schedule-consultation"
+        element={<ScheduleConsultation />}
+      />
+      <Route
+        path="/consultation-confirmation"
+        element={<ConsultationConfirmation />}
       />
     </Routes>
   )
