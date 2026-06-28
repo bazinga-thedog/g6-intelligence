@@ -2,25 +2,16 @@ import { useState } from 'react'
 import './ConversionModal.css'
 
 export default function ConversionModal({ isOpen, onClose, context }) {
-  const [monthlyForm, setMonthlyForm] = useState({
-    name: '',
-    email: '',
-    paymentInfo: ''
-  })
-  const [fullServiceEmail, setFullServiceEmail] = useState('')
-
   if (!isOpen) return null
 
-  const handleMonthlySubmit = (e) => {
-    e.preventDefault()
+  const handleMonthlySubmit = () => {
     // TODO: Handle monthly membership signup
-    console.log('Monthly membership:', monthlyForm)
+    console.log('Monthly membership signup')
   }
 
-  const handleFullServiceSubmit = (e) => {
-    e.preventDefault()
+  const handleFullServiceSubmit = () => {
     // TODO: Handle full service request
-    console.log('Full service request:', fullServiceEmail)
+    console.log('Full service request')
   }
 
   return (
@@ -77,44 +68,12 @@ export default function ConversionModal({ isOpen, onClose, context }) {
               </div>
             </div>
 
-            <form className="conversion-form" onSubmit={handleMonthlySubmit}>
-              <div className="form-group">
-                <label htmlFor="monthly-name">Full Name</label>
-                <input
-                  type="text"
-                  id="monthly-name"
-                  value={monthlyForm.name}
-                  onChange={(e) => setMonthlyForm({...monthlyForm, name: e.target.value})}
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="monthly-email">Email Address</label>
-                <input
-                  type="email"
-                  id="monthly-email"
-                  value={monthlyForm.email}
-                  onChange={(e) => setMonthlyForm({...monthlyForm, email: e.target.value})}
-                  placeholder="your@email.com"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="monthly-payment">Payment Information</label>
-                <input
-                  type="text"
-                  id="monthly-payment"
-                  value={monthlyForm.paymentInfo}
-                  onChange={(e) => setMonthlyForm({...monthlyForm, paymentInfo: e.target.value})}
-                  placeholder="Card number"
-                  required
-                />
-              </div>
-              <button type="submit" className="conversion-cta conversion-cta-outlined">
-                Start Membership
-              </button>
-            </form>
+            <button
+              className="conversion-cta conversion-cta-outlined"
+              onClick={handleMonthlySubmit}
+            >
+              Start Membership
+            </button>
           </div>
 
           {/* Right Column - Full Service */}
@@ -169,22 +128,12 @@ export default function ConversionModal({ isOpen, onClose, context }) {
               </div>
             </div>
 
-            <form className="conversion-form" onSubmit={handleFullServiceSubmit}>
-              <div className="form-group">
-                <label htmlFor="fullservice-email">Email Address</label>
-                <input
-                  type="email"
-                  id="fullservice-email"
-                  value={fullServiceEmail}
-                  onChange={(e) => setFullServiceEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                />
-              </div>
-              <button type="submit" className="conversion-cta conversion-cta-filled">
-                Request Access
-              </button>
-            </form>
+            <button
+              className="conversion-cta conversion-cta-filled"
+              onClick={handleFullServiceSubmit}
+            >
+              Request Access
+            </button>
           </div>
         </div>
       </div>

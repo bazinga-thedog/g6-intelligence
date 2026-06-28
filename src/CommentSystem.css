@@ -405,3 +405,14 @@ body.comment-add-mode * {
   color: #5a5a5a;
   font-weight: 300;
 }
+
+/* Hide comment system on mobile */
+@media (max-width: 768px) {
+  .comment-toggles,
+  .comment-marker,
+  .comment-popup,
+  .comment-view-popup,
+  .mode-indicator {
+    display: none !important;
+  }
+}

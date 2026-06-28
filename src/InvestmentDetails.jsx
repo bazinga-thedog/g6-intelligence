@@ -727,6 +727,11 @@ export default function InvestmentDetails() {
     }
   }
 
+  const getAdvisorType = (ctaText) => {
+    // Extract the advisor type from "Help me find verified X"
+    return ctaText.replace('Help me find ', '')
+  }
+
   const toggleActivityExpansion = (activityId) => {
     setExpandedActivities(prev => ({
       ...prev,
@@ -869,6 +874,13 @@ export default function InvestmentDetails() {
         {/* Expanded Phase Roadmap - Vertical */}
         {activePhase && (
           <div className="phase-roadmap-expanded">
+            {/* Mobile Close Button */}
+            <button className="mobile-close-btn" onClick={() => setActivePhase(null)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
             {/* Vertical Sub-steps Accordion */}
             <div className="substeps-vertical">
               {roadmapData[activePhase].subSteps.map((subStep, subIndex) => (
@@ -944,19 +956,22 @@ export default function InvestmentDetails() {
                                             <span className="activity-accordion-duration">{activity.duration}</span>
                                           )}
                                           {activity.cta && (
-                                            <button
-                                              className="activity-cta-button"
-                                              onClick={() => {
-                                                setModalContext(activity.cta)
-                                                setShowConversionModal(true)
-                                              }}
-                                            >
-                                              {activity.cta.text}
-                                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <line x1="5" y1="12" x2="19" y2="12"/>
-                                                <polyline points="12 5 19 12 12 19"/>
-                                              </svg>
-                                            </button>
+                                            <div className="activity-cta-wrapper">
+                                              <span className="activity-cta-label">Help me find</span>
+                                              <button
+                                                className="activity-cta-button"
+                                                onClick={() => {
+                                                  setModalContext(activity.cta)
+                                                  setShowConversionModal(true)
+                                                }}
+                                              >
+                                                {getAdvisorType(activity.cta.text)}
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                  <line x1="5" y1="12" x2="19" y2="12"/>
+                                                  <polyline points="12 5 19 12 12 19"/>
+                                                </svg>
+                                              </button>
+                                            </div>
                                           )}
                                         </div>
                                       </div>
@@ -1037,19 +1052,22 @@ export default function InvestmentDetails() {
                                         <span className="activity-accordion-duration">{activity.duration}</span>
                                       )}
                                       {activity.cta && (
-                                        <button
-                                          className="activity-cta-button"
-                                          onClick={() => {
-                                            setModalContext(activity.cta)
-                                            setShowConversionModal(true)
-                                          }}
-                                        >
-                                          {activity.cta.text}
-                                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <line x1="5" y1="12" x2="19" y2="12"/>
-                                            <polyline points="12 5 19 12 12 19"/>
-                                          </svg>
-                                        </button>
+                                        <div className="activity-cta-wrapper">
+                                          <span className="activity-cta-label">Help me find</span>
+                                          <button
+                                            className="activity-cta-button"
+                                            onClick={() => {
+                                              setModalContext(activity.cta)
+                                              setShowConversionModal(true)
+                                            }}
+                                          >
+                                            {getAdvisorType(activity.cta.text)}
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                              <line x1="5" y1="12" x2="19" y2="12"/>
+                                              <polyline points="12 5 19 12 12 19"/>
+                                            </svg>
+                                          </button>
+                                        </div>
                                       )}
                                     </div>
                                   </div>
@@ -1097,19 +1115,22 @@ export default function InvestmentDetails() {
                                     <span className="activity-accordion-duration">{activity.duration}</span>
                                   )}
                                   {activity.cta && (
-                                    <button
-                                      className="activity-cta-button"
-                                      onClick={() => {
-                                        setModalContext(activity.cta)
-                                        setShowConversionModal(true)
-                                      }}
-                                    >
-                                      {activity.cta.text}
-                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <line x1="5" y1="12" x2="19" y2="12"/>
-                                        <polyline points="12 5 19 12 12 19"/>
-                                      </svg>
-                                    </button>
+                                    <div className="activity-cta-wrapper">
+                                      <span className="activity-cta-label">Help me find</span>
+                                      <button
+                                        className="activity-cta-button"
+                                        onClick={() => {
+                                          setModalContext(activity.cta)
+                                          setShowConversionModal(true)
+                                        }}
+                                      >
+                                        {getAdvisorType(activity.cta.text)}
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <line x1="5" y1="12" x2="19" y2="12"/>
+                                          <polyline points="12 5 19 12 12 19"/>
+                                        </svg>
+                                      </button>
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -1164,19 +1185,22 @@ export default function InvestmentDetails() {
                                   <span className="activity-accordion-duration">{activity.duration}</span>
                                 )}
                                 {activity.cta && (
-                                  <button
-                                    className="activity-cta-button"
-                                    onClick={() => {
-                                      setModalContext(activity.cta)
-                                      setShowConversionModal(true)
-                                    }}
-                                  >
-                                    {activity.cta.text}
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                      <line x1="5" y1="12" x2="19" y2="12"/>
-                                      <polyline points="12 5 19 12 12 19"/>
-                                    </svg>
-                                  </button>
+                                  <div className="activity-cta-wrapper">
+                                    <span className="activity-cta-label">Help me find</span>
+                                    <button
+                                      className="activity-cta-button"
+                                      onClick={() => {
+                                        setModalContext(activity.cta)
+                                        setShowConversionModal(true)
+                                      }}
+                                    >
+                                      {getAdvisorType(activity.cta.text)}
+                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                        <polyline points="12 5 19 12 12 19"/>
+                                      </svg>
+                                    </button>
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -1216,19 +1240,22 @@ export default function InvestmentDetails() {
                                   <span className="activity-accordion-duration">{subStep.activities[0].duration}</span>
                                 )}
                                 {subStep.activities[0].cta && (
-                                  <button
-                                    className="activity-cta-button"
-                                    onClick={() => {
-                                      setModalContext(subStep.activities[0].cta)
-                                      setShowConversionModal(true)
-                                    }}
-                                  >
-                                    {subStep.activities[0].cta.text}
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                      <line x1="5" y1="12" x2="19" y2="12"/>
-                                      <polyline points="12 5 19 12 12 19"/>
-                                    </svg>
-                                  </button>
+                                  <div className="activity-cta-wrapper">
+                                    <span className="activity-cta-label">Help me find</span>
+                                    <button
+                                      className="activity-cta-button"
+                                      onClick={() => {
+                                        setModalContext(subStep.activities[0].cta)
+                                        setShowConversionModal(true)
+                                      }}
+                                    >
+                                      {getAdvisorType(subStep.activities[0].cta.text)}
+                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                        <polyline points="12 5 19 12 12 19"/>
+                                      </svg>
+                                    </button>
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -1269,19 +1296,22 @@ export default function InvestmentDetails() {
                                     <span className="activity-accordion-duration">{activity.duration}</span>
                                   )}
                                   {activity.cta && (
-                                    <button
-                                      className="activity-cta-button"
-                                      onClick={() => {
-                                        setModalContext(activity.cta)
-                                        setShowConversionModal(true)
-                                      }}
-                                    >
-                                      {activity.cta.text}
-                                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <line x1="5" y1="12" x2="19" y2="12"/>
-                                        <polyline points="12 5 19 12 12 19"/>
-                                      </svg>
-                                    </button>
+                                    <div className="activity-cta-wrapper">
+                                      <span className="activity-cta-label">Help me find</span>
+                                      <button
+                                        className="activity-cta-button"
+                                        onClick={() => {
+                                          setModalContext(activity.cta)
+                                          setShowConversionModal(true)
+                                        }}
+                                      >
+                                        {getAdvisorType(activity.cta.text)}
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                          <line x1="5" y1="12" x2="19" y2="12"/>
+                                          <polyline points="12 5 19 12 12 19"/>
+                                        </svg>
+                                      </button>
+                                    </div>
                                   )}
                                 </div>
                               </div>

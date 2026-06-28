@@ -204,6 +204,9 @@ export default function LandingPage({ onSurveyComplete }) {
               </div>
             </div>
           </div>
+          <div className="footer-mobile-contact">
+            <button className="contact-btn">📞 Contact Us</button>
+          </div>
           <div className="footer-bottom">
             <p>&copy; 2026 G6 Intelligence. All rights reserved.</p>
             <div className="footer-locations">
