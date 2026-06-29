@@ -151,9 +151,21 @@ export const isValidSegmentValue = (criterion, value) => {
 }
 
 /**
+ * INVESTOR PROFILES
+ *
+ * 4 distinct investor profiles based on investment objectives, risk tolerance, and experience
+ */
+export const INVESTOR_PROFILE = {
+  INCOME_SEEKER: 'Income Seeker',                 // Yield-focused, conservative, wants rental income
+  GROWTH_HUNTER: 'Growth Hunter',                 // Capital appreciation, aggressive, buy low/sell high
+  LIFESTYLE_INVESTOR: 'Lifestyle Investor',       // Residency/personal use, lifestyle over returns
+  SOPHISTICATED_BUILDER: 'Sophisticated Builder'  // Experienced diversifier, strategic global portfolio
+}
+
+/**
  * Example usage:
  *
- * import { SEGMENTATION } from './segmentation'
+ * import { SEGMENTATION, INVESTOR_PROFILE } from './segmentation'
  *
  * // Decision logic based on segmentation
  * if (prospect.netWorth === SEGMENTATION.NET_WORTH.ULTRA_HIGH) {
@@ -164,7 +176,11 @@ export const isValidSegmentValue = (criterion, value) => {
  *   // Route to concierge service team
  * }
  *
- * if (prospect.taxResidency === SEGMENTATION.TAX_RESIDENCY.DUBAI) {
- *   // Show Dubai-specific tax advantages
+ * if (prospect.investorProfile === INVESTOR_PROFILE.INCOME_SEEKER) {
+ *   // Show turnkey rental properties with stable yields
+ * }
+ *
+ * if (prospect.investorProfile === INVESTOR_PROFILE.GROWTH_HUNTER) {
+ *   // Show emerging market opportunities and development projects
  * }
  */

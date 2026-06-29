@@ -14,9 +14,14 @@ CREATE TABLE prospect_segmentation (
 
   -- Profile Criteria (4 additional KYC attributes)
   risk_tolerance TEXT NOT NULL,
+  investment_horizon TEXT NOT NULL,
   experience_abroad TEXT NOT NULL,
   re_experience TEXT NOT NULL,
   yield_alignment TEXT NOT NULL,
+  diversification_priority TEXT NOT NULL,
+
+  -- Investor Profile (calculated from segmentation + profile data)
+  investor_profile TEXT NOT NULL,
 
   -- Survey Reference
   survey_answers JSONB NOT NULL,
@@ -43,6 +48,7 @@ CREATE INDEX idx_risk_tolerance ON prospect_segmentation(risk_tolerance);
 CREATE INDEX idx_experience_abroad ON prospect_segmentation(experience_abroad);
 CREATE INDEX idx_re_experience ON prospect_segmentation(re_experience);
 CREATE INDEX idx_yield_alignment ON prospect_segmentation(yield_alignment);
+CREATE INDEX idx_investor_profile ON prospect_segmentation(investor_profile);
 CREATE INDEX idx_created_at ON prospect_segmentation(created_at);
 
 -- Create function to update updated_at timestamp

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
-import { SEGMENTATION, PROFILE, YIELD_BENCHMARKS } from './segmentation'
+import { SEGMENTATION, PROFILE, YIELD_BENCHMARKS, INVESTOR_PROFILE } from './segmentation'
 import { getProspectGuid } from './prospectGuid'
 import './Survey.css'
 
@@ -398,15 +398,78 @@ export default function Survey({ onClose, onComplete }) {
     }
   }
 
+  const determineInvestorProfile = (segmentation, profile) => {
+    const { investmentObjective, driver, driverScore } = segmentation
+    const { riskTolerance, reExperience, experienceAbroad, diversificationPriority } = profile
+
+    // 1. LIFESTYLE INVESTOR - Residency or Personal Use objectives
+    if (investmentObjective === SEGMENTATION.INVESTMENT_OBJECTIVE.RESIDENCY ||
+        investmentObjective === SEGMENTATION.INVESTMENT_OBJECTIVE.PERSONAL) {
+      return INVESTOR_PROFILE.LIFESTYLE_INVESTOR
+    }
+
+    // 2. SOPHISTICATED BUILDER - Experienced + Strategic diversifier
+    // High experience (professional/experienced RE + established/extensive international)
+    // AND Growth-oriented risk tolerance OR diversification priority
+    const isExperienced = (
+      (reExperience === PROFILE.RE_EXPERIENCE.PROFESSIONAL || reExperience === PROFILE.RE_EXPERIENCE.EXPERIENCED) &&
+      (experienceAbroad === PROFILE.EXPERIENCE_ABROAD.ESTABLISHED || experienceAbroad === PROFILE.EXPERIENCE_ABROAD.EXTENSIVE)
+    )
+
+    const isStrategic = (
+      riskTolerance === PROFILE.RISK_TOLERANCE.GROWTH_ORIENTED ||
+      diversificationPriority === PROFILE.DIVERSIFICATION_PRIORITY.YES
+    )
+
+    if (isExperienced && isStrategic && driver === SEGMENTATION.DRIVER.OWN_PROCESS) {
+      return INVESTOR_PROFILE.SOPHISTICATED_BUILDER
+    }
+
+    // 3. INCOME SEEKER - Yield objective + Conservative risk tolerance
+    if (investmentObjective === SEGMENTATION.INVESTMENT_OBJECTIVE.YIELD) {
+      // Conservative or Very Conservative = Income Seeker
+      if (riskTolerance === PROFILE.RISK_TOLERANCE.CONSERVATIVE ||
+          riskTolerance === PROFILE.RISK_TOLERANCE.VERY_CONSERVATIVE) {
+        return INVESTOR_PROFILE.INCOME_SEEKER
+      }
+
+      // Growth-oriented with yield objective = could be Growth Hunter if experienced
+      if (riskTolerance === PROFILE.RISK_TOLERANCE.GROWTH_ORIENTED && driverScore >= 4) {
+        return INVESTOR_PROFILE.GROWTH_HUNTER
+      }
+
+      // Default yield seekers to Income Seeker
+      return INVESTOR_PROFILE.INCOME_SEEKER
+    }
+
+    // 4. GROWTH HUNTER - Growth objective + Growth-oriented risk tolerance
+    if (investmentObjective === SEGMENTATION.INVESTMENT_OBJECTIVE.GROWTH &&
+        riskTolerance === PROFILE.RISK_TOLERANCE.GROWTH_ORIENTED) {
+      return INVESTOR_PROFILE.GROWTH_HUNTER
+    }
+
+    // Default fallback based on risk tolerance
+    if (riskTolerance === PROFILE.RISK_TOLERANCE.GROWTH_ORIENTED) {
+      return INVESTOR_PROFILE.GROWTH_HUNTER
+    }
+
+    // Conservative default
+    return INVESTOR_PROFILE.INCOME_SEEKER
+  }
+
   const saveSurvey = async (surveyAnswers) => {
     try {
       // Generate segmentation and profile
       const segmentation = segmentProspect(surveyAnswers)
       const profile = profileProspect(surveyAnswers)
 
+      // Determine investor profile
+      const investorProfile = determineInvestorProfile(segmentation, profile)
+
       // Log to console
       console.log('=== PROSPECT SEGMENTATION ===')
       console.log('Prospect GUID:', prospectGuid)
+      console.log('\nINVESTOR PROFILE:', investorProfile)
       console.log('\nSEGMENTATION:')
       console.log('  Tax Residency:', segmentation.taxResidency)
       console.log('  Net Worth:', segmentation.netWorth)
@@ -437,6 +500,7 @@ export default function Survey({ onClose, onComplete }) {
           re_experience: profile.reExperience,
           yield_alignment: profile.yieldAlignment,
           diversification_priority: profile.diversificationPriority,
+          investor_profile: investorProfile,
           survey_answers: surveyAnswers,
           selected_currency: selectedCurrency
         })
