@@ -524,6 +524,11 @@
   transform: translateX(4px);
 }
 
+.cta-button:active {
+  transform: translateX(2px) scale(0.97);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
 .cta-button svg {
   transition: transform 0.3s ease;
 }

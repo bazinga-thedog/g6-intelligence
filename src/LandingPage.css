@@ -268,6 +268,11 @@ html, body {
   box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
 }
 
+.hero-btn-primary:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+}
+
 .hero-btn-secondary {
   background: transparent;
   color: var(--white);
@@ -279,6 +284,11 @@ html, body {
   background: rgba(255, 255, 255, 0.1);
   border-color: var(--white);
   transform: translateY(-2px);
+}
+
+.hero-btn-secondary:active {
+  transform: translateY(0) scale(0.97);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .hero-btn-primary.selected,

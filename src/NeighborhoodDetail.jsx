@@ -11,6 +11,11 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // Fetch quality of life data from Supabase
   useEffect(() => {
     const fetchQualityOfLife = async () => {

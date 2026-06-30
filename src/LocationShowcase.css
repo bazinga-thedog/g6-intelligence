@@ -126,11 +126,19 @@
   transform: translateY(-1px);
 }
 
+.filter-btn:active {
+  transform: translateY(0) scale(0.96);
+}
+
 .filter-btn.active {
   background: #ffffff;
   border-color: #ffffff;
   color: #1a1a1a;
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+}
+
+.filter-btn.active:active {
+  transform: scale(0.96);
 }
 
 /* Content Area */
@@ -181,6 +189,15 @@
     0 0 80px rgba(74, 144, 226, 0.2);
 }
 
+.location-card:active {
+  transform: translateY(-4px) scale(0.98);
+  border-color: rgba(74, 144, 226, 0.8);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(74, 144, 226, 0.7),
+    0 0 30px rgba(74, 144, 226, 0.5);
+}
+
 /* Preferred Card Styling - Subtle, Understated */
 .location-card.preferred {
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -196,7 +213,16 @@
     0 0 80px rgba(74, 144, 226, 0.2);
 }
 
-/* Preferred Badge - Minimalist, No Gold Banner */
+.location-card.preferred:active {
+  transform: translateY(-4px) scale(0.98);
+  border-color: rgba(74, 144, 226, 0.8);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(74, 144, 226, 0.7),
+    0 0 30px rgba(74, 144, 226, 0.5);
+}
+
+/* Preferred Badge - Top 3 for investor profile */
 .preferred-badge {
   position: absolute;
   top: 1rem;
@@ -316,8 +342,8 @@
 /* Metrics Grid */
 .location-metrics {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
   padding: 1.5rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 0;
@@ -325,15 +351,31 @@
 
 .metric {
   text-align: center;
+  padding: 0.875rem 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  min-width: 0;
+}
+
+.metric.metric-highlight {
+  background: rgba(74, 144, 226, 0.08);
+  border: 1px solid rgba(74, 144, 226, 0.25);
+}
+
+.metric.metric-chart {
+  grid-column: 1 / -1;
+  padding: 1rem;
 }
 
 .metric-label {
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.6rem;
 }
 
 /* Disable tooltips on LocationShowcase - only show on NeighborhoodShowcase */
@@ -346,14 +388,34 @@
 }
 
 .metric-value {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #e5e5e5;
   line-height: 1.4;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .metric-value.growth {
   color: #4a90e2;
+}
+
+.metric-value.highlight {
+  color: #4a90e2;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.metric-value.positive {
+  color: #10b981;
+}
+
+/* Chart Container in Metric */
+.metric-chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
 }
 
 /* Price Growth Chart */
@@ -514,7 +576,40 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* More Options Button */
+/* See More Button */
+.see-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.see-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #e5e5e5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.see-more-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.see-more-btn svg {
+  transition: transform 0.3s ease;
+}
+
+/* More Options Button (legacy - keep for compatibility) */
 .more-options-container {
   display: flex;
   justify-content: center;
@@ -603,5 +698,35 @@
   .continue-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .location-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .metric {
+    padding: 0.75rem 0.875rem;
+  }
+
+  .metric.metric-chart {
+    grid-column: 1;
+  }
+
+  .metric-value {
+    font-size: 0.95rem;
+  }
+
+  .metric-value.highlight {
+    font-size: 1.05rem;
+  }
+
+  .profile-match-badge {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .metric-chart-container {
+    padding-top: 0.25rem;
   }
 }

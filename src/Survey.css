@@ -181,6 +181,10 @@
   border-color: rgba(74, 144, 226, 0.3);
 }
 
+.currency-btn:active {
+  transform: scale(0.95);
+}
+
 .currency-btn.active {
   background: rgba(74, 144, 226, 0.15);
   border-color: rgba(74, 144, 226, 0.5);
@@ -267,7 +271,21 @@
 }
 
 .survey-option-card:active {
-  transform: translateX(4px);
+  transform: translateX(4px) scale(0.98);
+  background: rgba(74, 144, 226, 0.2);
+  border-color: rgba(74, 144, 226, 0.6);
+}
+
+/* Click ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 
 .option-label {
@@ -341,7 +359,9 @@
 }
 
 .survey-option-detailed:active {
-  transform: translateX(4px);
+  transform: translateX(4px) scale(0.98);
+  background: rgba(74, 144, 226, 0.2);
+  border-color: rgba(74, 144, 226, 0.6);
 }
 
 .option-text {
@@ -481,6 +501,14 @@
 .survey-input-btn.submit:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+.survey-input-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.survey-input-btn.dont-know:active {
+  transform: scale(0.97);
 }
 
 /* Responsive */

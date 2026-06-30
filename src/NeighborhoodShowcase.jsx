@@ -16,6 +16,11 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   const [error, setError] = useState(null)
   const [overviewError, setOverviewError] = useState(null)
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // Fetch city overview from investment_locations (merged table)
   useEffect(() => {
     const fetchCityOverview = async () => {
