@@ -10,6 +10,27 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* Override description alignment for neighborhoods */
+.neighborhood-showcase .location-description {
+  text-align: left;
+}
+
+/* Neighborhood name badge - larger than flag badge */
+.neighborhood-name-badge {
+  padding: 0.5rem 1rem;
+  background: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Enable overflow visible for tooltips in neighborhood cards */
 .neighborhood-showcase .location-card {
   overflow: visible;
@@ -127,6 +148,7 @@
   color: #d1d5db;
   margin-bottom: 3rem;
   max-width: 900px;
+  text-align: left;
 }
 
 /* Key Highlights */

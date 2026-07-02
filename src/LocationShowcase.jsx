@@ -17,6 +17,14 @@ export default function LocationShowcase({ onCitySelect }) {
   const [taxResidency, setTaxResidency] = useState(null)
   const [showAllCities, setShowAllCities] = useState(false)
 
+  // Helper function to get country flag image URL from country code
+  const getCountryFlagUrl = (countryCode) => {
+    // Convert country code to lowercase for the flag CDN
+    // UK uses GB as the ISO code
+    const isoCode = countryCode === 'UK' ? 'gb' : countryCode.toLowerCase()
+    return `https://flagcdn.com/w80/${isoCode}.png`
+  }
+
   // Fetch investor profile and tax residency from survey
   useEffect(() => {
     const fetchUserData = async () => {
@@ -540,7 +548,13 @@ export default function LocationShowcase({ onCitySelect }) {
               <div className="location-image">
                 <img src={location.image} alt={`${location.city}, ${location.country}`} />
                 <div className="location-overlay">
-                  <div className="location-country-badge">{location.country}</div>
+                  <div className="location-country-badge">
+                    <img
+                      src={getCountryFlagUrl(location.countryCode)}
+                      alt={`${location.country} flag`}
+                      className="country-flag-img"
+                    />
+                  </div>
                 </div>
               </div>
 

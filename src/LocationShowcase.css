@@ -283,15 +283,24 @@
 }
 
 .location-country-badge {
-  padding: 0.5rem 1rem;
-  background: rgba(26, 26, 26, 0.95);
+  padding: 0.175rem;
+  background: rgba(26, 26, 26, 0.85);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #e5e5e5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+}
+
+.country-flag-img {
+  width: 12px;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+  opacity: 0.9;
 }
 
 .location-selected-badge {

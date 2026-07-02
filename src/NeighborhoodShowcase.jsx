@@ -377,7 +377,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
               <div className="location-image">
                 <img src={neighborhood.image} alt={neighborhood.name} />
                 <div className="location-overlay">
-                  <div className="location-country-badge">{neighborhood.name}</div>
+                  <div className="neighborhood-name-badge">{neighborhood.name}</div>
                 </div>
               </div>
 
