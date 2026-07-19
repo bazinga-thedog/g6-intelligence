@@ -418,7 +418,7 @@ html, body {
 /* Markets Section */
 .markets-section {
   padding: 6rem 3rem;
-  background: var(--white);
+  background: linear-gradient(180deg, #000000 0%, #1a1f2e 100%);
 }
 
 .section-header {
@@ -430,20 +430,20 @@ html, body {
 .section-header h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--text-dark);
+  color: var(--white);
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
 .section-header p {
   font-size: 1.1rem;
-  color: var(--text-gray);
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;
 }
 
 .markets-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -497,19 +497,24 @@ html, body {
 }
 
 .market-image.uk {
-  background: linear-gradient(135deg, #7a8b99 0%, #a4b5c4 100%);
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
+              url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&q=80');
+  background-size: cover;
+  background-position: center;
 }
 
 .market-image.portugal {
-  background: linear-gradient(135deg, #c19a6b 0%, #d4af7a 100%);
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
+              url('https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&q=80');
+  background-size: cover;
+  background-position: center;
 }
 
 .market-image.dubai {
-  background: linear-gradient(135deg, #d4a574 0%, #e8c9a0 100%);
-}
-
-.market-image.singapore {
-  background: linear-gradient(135deg, #5f8575 0%, #7a9f8f 100%);
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
+              url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80');
+  background-size: cover;
+  background-position: center;
 }
 
 /* Footer */
@@ -526,11 +531,12 @@ html, body {
 
 .footer-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 4rem;
-  margin-bottom: 3rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  justify-items: start;
+  align-items: start;
 }
 
 .footer-brand h3 {
@@ -550,9 +556,9 @@ html, body {
   opacity: 0.7;
 }
 
-.footer-links {
+.footer-column {
   display: flex;
-  gap: 4rem;
+  flex-direction: column;
 }
 
 .footer-column h4 {
@@ -583,6 +589,7 @@ html, body {
   align-items: center;
   font-size: 0.9rem;
   opacity: 0.6;
+  margin-top: 3rem;
 }
 
 .footer-locations {
@@ -802,7 +809,6 @@ html, body {
   }
 
   .footer-content {
-    margin-bottom: 2rem;
     padding-bottom: 1.5rem;
   }
 
@@ -814,15 +820,11 @@ html, body {
     font-size: 0.875rem;
   }
 
-  .footer-links {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
 
   .footer-mobile-contact {
     display: flex;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin: 2rem 0;
   }
 
   .footer-mobile-contact .contact-btn {

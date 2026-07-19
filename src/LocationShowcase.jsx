@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import { getProspectGuid } from './prospectGuid'
-import CommentSystem from './CommentSystem'
 import './LocationShowcase.css'
 
 export default function LocationShowcase({ onCitySelect }) {
@@ -41,14 +40,11 @@ export default function LocationShowcase({ onCitySelect }) {
           .single()
 
         if (error) {
-          console.log('No user data found:', error)
           return
         }
 
         setInvestorProfile(data?.investor_profile)
         setTaxResidency(data?.tax_residency)
-        console.log('Investor Profile:', data?.investor_profile)
-        console.log('Tax Residency:', data?.tax_residency)
       } catch (err) {
         console.error('Error fetching user data:', err)
       }
@@ -74,8 +70,6 @@ export default function LocationShowcase({ onCitySelect }) {
         .neq('city', 'Singapore')
 
       if (fetchError) throw fetchError
-
-      console.log('Fetched locations from database:', data.length)
 
       // Transform Supabase data to match component structure
       const transformedData = data.map(loc => ({
@@ -139,23 +133,10 @@ export default function LocationShowcase({ onCitySelect }) {
 
     const userCountryCode = getTaxResidencyCountryCode(userTaxResidency)
 
-    console.log('=== Calculating Preferred Cities ===')
-    console.log('Tax Residency:', userTaxResidency)
-    console.log('User Country Code:', userCountryCode)
-    console.log('Total locations:', locs.length)
-
     // Filter out user's tax residency country for preferred calculation
     const eligibleLocations = userCountryCode
-      ? locs.filter(loc => {
-          const isExcluded = loc.countryCode === userCountryCode
-          if (isExcluded) {
-            console.log(`Excluding ${loc.city} (${loc.countryCode}) - matches user country`)
-          }
-          return !isExcluded
-        })
+      ? locs.filter(loc => loc.countryCode !== userCountryCode)
       : locs
-
-    console.log('Eligible locations after filtering:', eligibleLocations.length)
 
     // Sort by profile score
     const sortedByScore = [...eligibleLocations].sort((a, b) => {
@@ -166,9 +147,6 @@ export default function LocationShowcase({ onCitySelect }) {
 
     // Get top 3 IDs
     const top3Ids = sortedByScore.slice(0, 3).map(loc => loc.id)
-    const top3Cities = sortedByScore.slice(0, 3).map(loc => `${loc.city} (${loc.countryCode})`)
-
-    console.log('Top 3 Preferred:', top3Cities)
 
     // Mark top 3 as preferred
     return locs.map(loc => ({
@@ -221,13 +199,18 @@ export default function LocationShowcase({ onCitySelect }) {
     if (rawLocations.length === 0) return []
 
     if (!investorProfile) {
-      console.log('No investor profile yet, returning raw locations')
       return rawLocations
     }
 
-    console.log('useMemo: Calculating preferred cities')
     return calculatePreferredCities(rawLocations, investorProfile, taxResidency)
   }, [rawLocations, investorProfile, taxResidency])
+
+  // Helper function to get color class based on growth potential
+  const getGrowthPotentialColor = (value) => {
+    if (value >= 7) return 'growth-high' // 7-10: High growth (green)
+    if (value >= 4) return 'growth-medium' // 4-6: Medium growth (amber/orange)
+    return 'growth-low' // 0-3: Low growth (blue)
+  }
 
   // Get profile-specific metrics to display
   const getProfileMetrics = (location, profile) => {
@@ -275,9 +258,9 @@ export default function LocationShowcase({ onCitySelect }) {
             type: location.incomeStability >= 7 ? 'positive' : 'neutral'
           },
           {
-            label: location.residencyProgram ? 'Golden Visa' : 'Days to Rent',
-            value: location.residencyProgram ? 'Available' : `${location.metrics.daysToRent.avg} days`,
-            type: location.residencyProgram ? 'positive' : 'neutral'
+            label: 'Days to Rent',
+            value: `${location.metrics.daysToRent.avg} days`,
+            type: 'neutral'
           }
         ]
 
@@ -292,7 +275,12 @@ export default function LocationShowcase({ onCitySelect }) {
           {
             label: 'Growth Potential',
             value: `${location.growthPotential || 5}/10`,
-            type: location.growthPotential >= 7 ? 'positive' : 'neutral'
+            type: getGrowthPotentialColor(location.growthPotential || 5)
+          },
+          {
+            label: 'Market Transparency',
+            value: `${location.marketTransparency || 5}/10`,
+            type: location.marketTransparency >= 8 ? 'positive' : 'neutral'
           },
           chartMetric
         ]
@@ -306,24 +294,30 @@ export default function LocationShowcase({ onCitySelect }) {
             type: location.lifestyleAppeal >= 8 ? 'highlight' : 'positive'
           },
           {
-            label: location.residencyProgram ? 'Golden Visa' : 'Overall Quality',
-            value: location.residencyProgram ? 'Available' : `${Math.round((location.lifestyleAppeal + location.incomeStability) / 2)}/10`,
+            label: 'Overall Quality',
+            value: `${Math.round((location.lifestyleAppeal + location.incomeStability) / 2)}/10`,
             type: 'positive'
           },
           {
-            label: 'Rental Yield',
-            value: `${location.metrics.rentalYield.min}% - ${location.metrics.rentalYield.max}%`,
-            type: 'neutral'
-          }
+            label: 'Golden Visa',
+            value: location.residencyProgram ? 'Available' : 'Not Available',
+            type: location.residencyProgram ? 'positive' : 'neutral'
+          },
+          chartMetric
         ]
 
       case 'Sophisticated Builder':
         return [
           priceMetric,
           {
+            label: 'Rental Yield',
+            value: `${location.metrics.rentalYield.min}% - ${location.metrics.rentalYield.max}%`,
+            type: 'growth'
+          },
+          {
             label: 'Growth Potential',
             value: `${location.growthPotential || 5}/10`,
-            type: 'positive'
+            type: getGrowthPotentialColor(location.growthPotential || 5)
           },
           {
             label: 'Market Transparency',
@@ -352,6 +346,13 @@ export default function LocationShowcase({ onCitySelect }) {
     return `${symbols[currency] || ''}${value.toLocaleString()}`
   }
 
+  // Helper function to get color for growth chart based on value
+  const getGrowthChartColor = (value) => {
+    if (value >= 5) return '#10b981' // Green - Good growth (≥5%)
+    if (value >= 0) return '#e5e5e5' // White - Low growth (0-4.9%)
+    return '#f59e0b' // Orange - Bad/negative growth (<0%)
+  }
+
   // Helper function to render mini trendline chart
   const renderTrendline = (data) => {
     const max = Math.max(...data)
@@ -369,7 +370,7 @@ export default function LocationShowcase({ onCitySelect }) {
     ).join(' ')
 
     const latestGrowth = data[data.length - 1]
-    const isPositive = latestGrowth >= 0
+    const chartColor = getGrowthChartColor(latestGrowth)
 
     return (
       <div className="growth-chart">
@@ -377,7 +378,7 @@ export default function LocationShowcase({ onCitySelect }) {
           <path
             d={pathData}
             fill="none"
-            stroke={isPositive ? '#10b981' : '#ef4444'}
+            stroke={chartColor}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -388,12 +389,12 @@ export default function LocationShowcase({ onCitySelect }) {
               cx={p.x}
               cy={p.y}
               r="3"
-              fill={isPositive ? '#10b981' : '#ef4444'}
+              fill={chartColor}
             />
           ))}
         </svg>
-        <div className={`growth-percentage ${isPositive ? 'positive' : 'negative'}`}>
-          {isPositive ? '+' : ''}{latestGrowth.toFixed(1)}%
+        <div className="growth-percentage" style={{ color: chartColor }}>
+          {latestGrowth >= 0 ? '+' : ''}{latestGrowth.toFixed(1)}%
         </div>
       </div>
     )
@@ -437,12 +438,6 @@ export default function LocationShowcase({ onCitySelect }) {
   // Show top 3 by default, or all if "See More" clicked
   const displayedLocations = showAllCities ? filteredLocations : filteredLocations.slice(0, 3)
   const hasMoreCities = filteredLocations.length > 3
-
-  // Debug: Log what's being displayed
-  console.log('=== Display Info ===')
-  console.log('Filter:', selectedFilter)
-  console.log('Filtered locations count:', filteredLocations.length)
-  console.log('Displayed locations:', displayedLocations.map(loc => `${loc.city} (${loc.countryCode}) - Preferred: ${loc.isPreferred}`))
 
   const handleLocationClick = (location) => {
     // Navigate to neighborhood view for this city
@@ -488,8 +483,6 @@ export default function LocationShowcase({ onCitySelect }) {
 
   return (
     <div className="location-showcase">
-      <CommentSystem pageId="locations" />
-
       {/* Navigation Header */}
       <div className="showcase-nav">
         <div className="showcase-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
@@ -582,7 +575,15 @@ export default function LocationShowcase({ onCitySelect }) {
                         <div className="metric-label">
                           {metric.label}
                         </div>
-                        <div className={`metric-value ${metric.type === 'highlight' ? 'highlight' : metric.type === 'positive' ? 'positive' : metric.type === 'growth' ? 'growth' : ''}`}>
+                        <div className={`metric-value ${
+                          metric.type === 'highlight' ? 'highlight' :
+                          metric.type === 'positive' ? 'positive' :
+                          metric.type === 'growth' ? 'growth' :
+                          metric.type === 'growth-high' ? 'growth-high' :
+                          metric.type === 'growth-medium' ? 'growth-medium' :
+                          metric.type === 'growth-low' ? 'growth-low' :
+                          ''
+                        }`}>
                           {metric.value}
                         </div>
                       </div>

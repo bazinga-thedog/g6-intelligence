@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "city_name": "Lisbon",
+    "name": "Alfama"
+  },
+  {
+    "id": 2,
+    "city_name": "Lisbon",
+    "name": "Chiado"
+  },
+  {
+    "id": 3,
+    "city_name": "Lisbon",
+    "name": "Belém"
+  },
+  {
+    "id": 4,
+    "city_name": "Lisbon",
+    "name": "Parque das Nações"
+  },
+  {
+    "id": 5,
+    "city_name": "Lisbon",
+    "name": "Príncipe Real"
+  },
+  {
+    "id": 6,
+    "city_name": "Lisbon",
+    "name": "Santos"
+  },
+  {
+    "id": 7,
+    "city_name": "Dubai",
+    "name": "Dubai Marina"
+  },
+  {
+    "id": 8,
+    "city_name": "Dubai",
+    "name": "Downtown Dubai"
+  },
+  {
+    "id": 9,
+    "city_name": "Dubai",
+    "name": "Palm Jumeirah"
+  },
+  {
+    "id": 10,
+    "city_name": "Dubai",
+    "name": "Business Bay"
+  },
+  {
+    "id": 11,
+    "city_name": "Dubai",
+    "name": "Jumeirah Beach Residence"
+  },
+  {
+    "id": 12,
+    "city_name": "Porto",
+    "name": "Ribeira"
+  },
+  {
+    "id": 13,
+    "city_name": "Porto",
+    "name": "Foz do Douro"
+  },
+  {
+    "id": 14,
+    "city_name": "Porto",
+    "name": "Boavista"
+  },
+  {
+    "id": 15,
+    "city_name": "Porto",
+    "name": "Cedofeita"
+  }
+]

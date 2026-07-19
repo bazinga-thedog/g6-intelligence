@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from './supabaseClient'
-import CommentSystem from './CommentSystem'
 import './NeighborhoodShowcase.css'
 
 export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborhoodSelect }) {
@@ -99,6 +98,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
             acquisitionTax: n.acquisition_tax,
             avgHoldingTime: n.avg_holding_time,
             daysAvailableToRent: n.days_available_to_rent,
+            avgDaysOnMarketSale: n.avg_days_on_market_sale,
             rentPerSqm: {
               EUR: { avg: n.rent_per_sqm_eur },
               USD: { avg: n.rent_per_sqm_usd },
@@ -131,6 +131,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     acquisitionTax: 'Tax percentage payable on property purchase (transfer tax)',
     avgHoldingTime: 'Average duration investors typically hold properties before selling',
     daysAvailableToRent: 'Average days properties are available on the market before being rented',
+    avgDaysOnMarketSale: 'Average number of days a property is listed on the market before being sold',
     rentPerSqm: 'Average monthly rent per square meter',
     avgRentalTime: 'Average lease duration - how long tenants typically stay',
     priceGrowth5Y: 'Historical property price trend over the last 5 years',
@@ -144,6 +145,13 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   const formatCurrency = (value, currency) => {
     const symbols = { EUR: '€', USD: '$', GBP: '£' }
     return `${symbols[currency] || ''}${value.toLocaleString()}`
+  }
+
+  // Helper function to get color for growth chart based on value
+  const getGrowthChartColor = (value) => {
+    if (value >= 5) return '#10b981' // Green - Good growth (≥5%)
+    if (value >= 0) return '#e5e5e5' // White - Low growth (0-4.9%)
+    return '#f59e0b' // Orange - Bad/negative growth (<0%)
   }
 
   const renderTrendline = (data) => {
@@ -162,7 +170,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     ).join(' ')
 
     const latestGrowth = data[data.length - 1]
-    const isPositive = latestGrowth >= 0
+    const chartColor = getGrowthChartColor(latestGrowth)
 
     return (
       <div className="growth-chart">
@@ -170,7 +178,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
           <path
             d={pathData}
             fill="none"
-            stroke={isPositive ? '#10b981' : '#ef4444'}
+            stroke={chartColor}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -181,12 +189,12 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
               cx={p.x}
               cy={p.y}
               r="3"
-              fill={isPositive ? '#10b981' : '#ef4444'}
+              fill={chartColor}
             />
           ))}
         </svg>
-        <div className={`growth-percentage ${isPositive ? 'positive' : 'negative'}`}>
-          {isPositive ? '+' : ''}{latestGrowth.toFixed(1)}%
+        <div className="growth-percentage" style={{ color: chartColor }}>
+          {latestGrowth >= 0 ? '+' : ''}{latestGrowth.toFixed(1)}%
         </div>
       </div>
     )
@@ -201,8 +209,6 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
 
   return (
     <div className="neighborhood-showcase">
-      <CommentSystem pageId={`neighborhoods-${cityToUse?.city || 'unknown'}`} />
-
       {/* Navigation Header */}
       <div className="showcase-nav">
         <button className="showcase-back-btn" onClick={onBack}>
@@ -248,7 +254,7 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
                   <polyline points="7 10 12 15 17 10"/>
                   <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-                Download Full Report
+                <span>Download Full Report <span className="free-badge">FREE</span></span>
               </button>
             </div>
 
@@ -430,6 +436,12 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
                       Avg Holding Time
                     </div>
                     <div className="metric-value">{neighborhood.metrics.avgHoldingTime}y</div>
+                  </div>
+                  <div className="metric-secondary">
+                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.avgDaysOnMarketSale}>
+                      Days on Market
+                    </div>
+                    <div className="metric-value">{neighborhood.metrics.avgDaysOnMarketSale} days</div>
                   </div>
                   <div className="metric-secondary">
                     <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.rentPerSqm}>

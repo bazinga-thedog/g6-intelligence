@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import CommentSystem from './CommentSystem'
 import Survey from './Survey'
 import { generateFreshGuid } from './prospectGuid'
 import './LandingPage.css'
@@ -35,19 +34,11 @@ export default function LandingPage({ onSurveyComplete }) {
 
   return (
     <div className="landing">
-      <CommentSystem pageId="landing" />
-
       {/* Navigation */}
       <nav className="nav-header">
         <div className="nav-container">
           <div className="nav-logo">
             <h1>G6<span>Intelligence</span></h1>
-          </div>
-          <div className="nav-menu">
-            <a href="#home" className="nav-link active">Home</a>
-            <a href="#process" className="nav-link">Process</a>
-            <a href="#about" className="nav-link">About us</a>
-            <a href="#signup" className="nav-link">Sign up</a>
           </div>
           <div className="nav-actions">
             <button className="login-btn">Login</button>
@@ -65,7 +56,7 @@ export default function LandingPage({ onSurveyComplete }) {
             </div>
             <h1 className="hero-title">
               Looking to diversify your<br/>
-              real estate portfolio <span className="highlight-italic">internationally</span>?
+              residential real estate portfolio <span className="highlight-italic">internationally</span>?
             </h1>
             <div className="hero-cta-buttons">
               <button
@@ -106,8 +97,8 @@ export default function LandingPage({ onSurveyComplete }) {
               </svg>
             </div>
             <div className="feature-content">
-              <h3>Full Intelligence</h3>
-              <p>100% clarity on your investment</p>
+              <h3>Real-Time Intelligence</h3>
+              <p>Data generated on demand, instantly</p>
             </div>
           </div>
           <div className="feature-card-dark">
@@ -118,8 +109,8 @@ export default function LandingPage({ onSurveyComplete }) {
               </svg>
             </div>
             <div className="feature-content">
-              <h3>Done For You</h3>
-              <p>We handle everything end-to-end</p>
+              <h3>One-Stop Shop</h3>
+              <p>No time for DIY? We handle it all</p>
             </div>
           </div>
           <div className="feature-card-dark">
@@ -131,8 +122,8 @@ export default function LandingPage({ onSurveyComplete }) {
               </svg>
             </div>
             <div className="feature-content">
-              <h3>The Best Deals</h3>
-              <p>Pre-vetted, off-market opportunities</p>
+              <h3>Global Network</h3>
+              <p>58 advisors • 72 units • 14 cities</p>
             </div>
           </div>
         </div>
@@ -142,7 +133,7 @@ export default function LandingPage({ onSurveyComplete }) {
       <section className="markets-section">
         <div className="section-header">
           <h2>Our Markets</h2>
-          <p>Four strategic global locations for residential real estate investment</p>
+          <p>Three strategic global locations for residential real estate investment</p>
         </div>
         <div className="markets-grid">
           <div className="market-card">
@@ -169,14 +160,6 @@ export default function LandingPage({ onSurveyComplete }) {
               </div>
             </div>
           </div>
-          <div className="market-card">
-            <div className="market-image singapore">
-              <div className="market-overlay">
-                <h3>Singapore</h3>
-                <p>Stable hub with strong governance</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -188,20 +171,17 @@ export default function LandingPage({ onSurveyComplete }) {
               <h3>G6<span>Intelligence</span></h3>
               <p>Global Real Estate Platform</p>
             </div>
-            <div className="footer-links">
-              <div className="footer-column">
-                <h4>Markets</h4>
-                <a href="#uk">United Kingdom</a>
-                <a href="#pt">Portugal</a>
-                <a href="#dubai">Dubai</a>
-                <a href="#sg">Singapore</a>
-              </div>
-              <div className="footer-column">
-                <h4>Company</h4>
-                <a href="#about">About</a>
-                <a href="#process">Process</a>
-                <a href="#contact">Contact</a>
-              </div>
+            <div className="footer-column">
+              <h4>Markets</h4>
+              <a href="#uk">United Kingdom</a>
+              <a href="#pt">Portugal</a>
+              <a href="#dubai">Dubai</a>
+            </div>
+            <div className="footer-column">
+              <h4>Company</h4>
+              <a href="#about">About</a>
+              <a href="#process">Process</a>
+              <a href="#contact">Contact</a>
             </div>
           </div>
           <div className="footer-mobile-contact">

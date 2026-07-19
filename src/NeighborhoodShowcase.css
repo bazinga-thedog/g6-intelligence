@@ -142,6 +142,18 @@
   box-shadow: 0 8px 24px rgba(74, 144, 226, 0.2);
 }
 
+.free-badge {
+  display: inline-block;
+  background: rgba(74, 144, 226, 0.2);
+  color: #4a90e2;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  letter-spacing: 0.03em;
+}
+
 .city-description {
   font-size: 1.125rem;
   line-height: 1.8;

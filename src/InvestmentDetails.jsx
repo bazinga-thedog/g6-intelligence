@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import ConversionModal from './ConversionModal'
-import CommentSystem from './CommentSystem'
 import './InvestmentDetails.css'
 
 export default function InvestmentDetails() {
@@ -775,8 +774,6 @@ export default function InvestmentDetails() {
 
   return (
     <div className="investment-details">
-      <CommentSystem pageId={`investment-${cityName}-${neighborhoodName}`} />
-
       {/* Navigation Header */}
       <div className="detail-nav">
         <button className="detail-back-btn" onClick={() => navigate(-1)}>

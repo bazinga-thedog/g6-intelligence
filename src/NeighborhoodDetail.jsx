@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
-import CommentSystem from './CommentSystem'
 import './NeighborhoodDetail.css'
 
 export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
@@ -163,8 +162,6 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
 
   return (
     <div className="neighborhood-detail">
-      <CommentSystem pageId={`neighborhood-detail-${cityName}-${neighborhood?.name || 'unknown'}`} />
-
       {/* Navigation Header */}
       <div className="detail-nav">
         <button className="detail-back-btn" onClick={onBack}>
