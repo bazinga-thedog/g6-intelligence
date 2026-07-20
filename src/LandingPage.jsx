@@ -218,7 +218,7 @@ export default function LandingPage({ onSurveyComplete }) {
               controls
               autoPlay
               className="video-player"
-              src="/G6-Intelligence.mp4"
+              src="https://res.cloudinary.com/dyoboavng/video/upload/v1784507108/G6-Intelligence_vs4mea.mp4"
             >
               Your browser does not support the video tag.
             </video>
