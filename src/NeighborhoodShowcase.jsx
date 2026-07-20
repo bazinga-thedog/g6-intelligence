@@ -139,7 +139,16 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   }
 
   const handleDownloadReport = () => {
-    alert('Feature not implemented yet - Full city investment report coming soon!')
+    if (cityToUse?.city === 'Dubai') {
+      // Download the PDF for Dubai
+      const link = document.createElement('a')
+      link.href = '/dubai-q1-2026-market-report.pdf'
+      link.download = 'dubai-q1-2026-market-report.pdf'
+      link.click()
+    } else {
+      // Show message for other cities
+      alert('Our agents are preparing this information. Take a look at Dubai to see the final result.')
+    }
   }
 
   const formatCurrency = (value, currency) => {
