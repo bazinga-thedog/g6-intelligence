@@ -109,12 +109,6 @@ export default function ConversionModal({ isOpen, onClose, context }) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                <span>Everything in Monthly plan</span>
-              </div>
-              <div className="conversion-benefit">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
                 <span>Dedicated investment advisor</span>
               </div>
               <div className="conversion-benefit">
@@ -139,7 +133,7 @@ export default function ConversionModal({ isOpen, onClose, context }) {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                <span>1% commission on successful close</span>
+                <span>Extensive Monthly Report Updates</span>
               </div>
             </div>
 
