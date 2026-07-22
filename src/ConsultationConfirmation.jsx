@@ -175,7 +175,7 @@ export default function ConsultationConfirmation() {
           {/* Footer Note */}
           <p className="confirmation-footer-note">
             If you have any immediate questions, please contact us at{' '}
-            <a href="mailto:invest@g6intelligence.com">invest@g6intelligence.com</a>
+            <a href="mailto:invest@g6-intelligence.com">invest@g6-intelligence.com</a>
           </p>
         </div>
       </div>
