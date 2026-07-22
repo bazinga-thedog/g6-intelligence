@@ -1,77 +1,37 @@
 [
-  {
-    "id": 1,
-    "city_name": "Lisbon",
-    "name": "Alfama"
-  },
-  {
-    "id": 2,
-    "city_name": "Lisbon",
-    "name": "Chiado"
-  },
-  {
-    "id": 3,
-    "city_name": "Lisbon",
-    "name": "Belém"
-  },
-  {
-    "id": 4,
-    "city_name": "Lisbon",
-    "name": "Parque das Nações"
-  },
-  {
-    "id": 5,
-    "city_name": "Lisbon",
-    "name": "Príncipe Real"
-  },
-  {
-    "id": 6,
-    "city_name": "Lisbon",
-    "name": "Santos"
-  },
-  {
-    "id": 7,
-    "city_name": "Dubai",
-    "name": "Dubai Marina"
-  },
-  {
-    "id": 8,
-    "city_name": "Dubai",
-    "name": "Downtown Dubai"
-  },
-  {
-    "id": 9,
-    "city_name": "Dubai",
-    "name": "Palm Jumeirah"
-  },
-  {
-    "id": 10,
-    "city_name": "Dubai",
-    "name": "Business Bay"
-  },
-  {
-    "id": 11,
-    "city_name": "Dubai",
-    "name": "Jumeirah Beach Residence"
-  },
-  {
-    "id": 12,
-    "city_name": "Porto",
-    "name": "Ribeira"
-  },
-  {
-    "id": 13,
-    "city_name": "Porto",
-    "name": "Foz do Douro"
-  },
-  {
-    "id": 14,
-    "city_name": "Porto",
-    "name": "Boavista"
-  },
-  {
-    "id": 15,
-    "city_name": "Porto",
-    "name": "Cedofeita"
-  }
+  {"id": 1, "name": "Alfama", "city_name": "Lisbon"},
+  {"id": 2, "name": "Chiado", "city_name": "Lisbon"},
+  {"id": 3, "name": "Belém", "city_name": "Lisbon"},
+  {"id": 4, "name": "Parque das Nações", "city_name": "Lisbon"},
+  {"id": 5, "name": "Príncipe Real", "city_name": "Lisbon"},
+  {"id": 6, "name": "Santos", "city_name": "Lisbon"},
+  {"id": 7, "name": "Dubai Marina", "city_name": "Dubai"},
+  {"id": 8, "name": "Downtown Dubai", "city_name": "Dubai"},
+  {"id": 9, "name": "Palm Jumeirah", "city_name": "Dubai"},
+  {"id": 10, "name": "Business Bay", "city_name": "Dubai"},
+  {"id": 11, "name": "Jumeirah Beach Residence", "city_name": "Dubai"},
+  {"id": 16, "name": "Quinta do Lago", "city_name": "Algarve"},
+  {"id": 17, "name": "Vale do Lobo", "city_name": "Algarve"},
+  {"id": 18, "name": "Vilamoura", "city_name": "Algarve"},
+  {"id": 19, "name": "Lagos", "city_name": "Algarve"},
+  {"id": 20, "name": "Carvoeiro", "city_name": "Algarve"},
+  {"id": 21, "name": "Albufeira", "city_name": "Algarve"},
+  {"id": 22, "name": "Foz do Douro", "city_name": "Porto"},
+  {"id": 23, "name": "Cedofeita", "city_name": "Porto"},
+  {"id": 24, "name": "Boavista", "city_name": "Porto"},
+  {"id": 25, "name": "Ribeira", "city_name": "Porto"},
+  {"id": 26, "name": "Bonfim", "city_name": "Porto"},
+  {"id": 27, "name": "Matosinhos", "city_name": "Porto"},
+  {"id": 28, "name": "The Park", "city_name": "Nottingham"},
+  {"id": 29, "name": "West Bridgford", "city_name": "Nottingham"},
+  {"id": 30, "name": "Mapperley Park", "city_name": "Nottingham"},
+  {"id": 31, "name": "Lace Market", "city_name": "Nottingham"},
+  {"id": 32, "name": "Beeston", "city_name": "Nottingham"},
+  {"id": 33, "name": "Sherwood", "city_name": "Nottingham"},
+  {"id": 34, "name": "Jesmond", "city_name": "Newcastle"},
+  {"id": 35, "name": "Gosforth", "city_name": "Newcastle"},
+  {"id": 36, "name": "Quayside", "city_name": "Newcastle"},
+  {"id": 37, "name": "Ouseburn", "city_name": "Newcastle"},
+  {"id": 38, "name": "Heaton", "city_name": "Newcastle"},
+  {"id": 39, "name": "Sandyford", "city_name": "Newcastle"}
 ]
