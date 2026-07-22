@@ -31,8 +31,8 @@ export default function ConversionModal({ isOpen, onClose, context }) {
         <div className="conversion-modal-content">
           {/* Left Column - Monthly Membership */}
           <div className="conversion-column">
-            <h3 className="conversion-title">Access to 3 Verified Networks</h3>
             <div className="conversion-badge">Monthly Membership</div>
+            <h3 className="conversion-title">Access to 3 Verified Networks</h3>
             <div className="conversion-price">€99<span>/month</span></div>
             <p className="conversion-description">
               Get instant access to verified broker contacts and 2 additional professional networks of your choice.
