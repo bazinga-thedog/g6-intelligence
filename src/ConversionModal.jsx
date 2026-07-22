@@ -91,7 +91,8 @@ export default function ConversionModal({ isOpen, onClose, context }) {
             <div className="service-columns">
               <div className="service-column">
                 <h4 className="service-column-title">Buy</h4>
-                <p className="service-column-description">Property acquisition support</p>
+                <p className="service-column-description">€1,180/year refundable if you buy</p>
+                <p className="service-column-description">1% commission on successful acquisition</p>
               </div>
               <div className="service-column">
                 <h4 className="service-column-title">Hold</h4>
@@ -101,10 +102,6 @@ export default function ConversionModal({ isOpen, onClose, context }) {
                 <h4 className="service-column-title">Sell</h4>
                 <p className="service-column-description">Exit strategy assistance</p>
               </div>
-            </div>
-
-            <div className="conversion-pricing-note">
-              <p className="conversion-pricing-highlight">1% commission on successful transactions (buy or sell)</p>
             </div>
 
             <div className="conversion-benefits">
