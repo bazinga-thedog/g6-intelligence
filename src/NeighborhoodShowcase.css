@@ -387,6 +387,12 @@
   padding: 0.75rem 1rem;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.metric-secondary.metric-highlight {
+  background: rgba(74, 144, 226, 0.08);
+  border: 1px solid rgba(74, 144, 226, 0.25);
 }
 
 .metric-label-with-icon {
@@ -402,6 +408,23 @@
 .metric-secondary .metric-value {
   font-size: 1.25rem;
   font-weight: 700;
+  color: #e5e5e5;
+}
+
+.metric-secondary .metric-value.highlight {
+  color: #4a90e2;
+  font-size: 1.3rem;
+}
+
+.metric-secondary .metric-value.positive {
+  color: #10b981;
+}
+
+.metric-secondary .metric-value.warning {
+  color: #f59e0b;
+}
+
+.metric-secondary .metric-value.neutral {
   color: #e5e5e5;
 }
 

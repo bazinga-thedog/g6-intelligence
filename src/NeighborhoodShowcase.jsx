@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from './supabaseClient'
+import { getProspectGuid } from './prospectGuid'
 import './NeighborhoodShowcase.css'
 
 export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborhoodSelect }) {
@@ -14,10 +15,39 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   const [loadingOverview, setLoadingOverview] = useState(true)
   const [error, setError] = useState(null)
   const [overviewError, setOverviewError] = useState(null)
+  const [investorProfile, setInvestorProfile] = useState(null)
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0)
+  }, [])
+
+  // Fetch investor profile from survey
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const prospectGuid = getProspectGuid()
+      if (!prospectGuid) return
+
+      try {
+        const { data, error } = await supabase
+          .from('prospect_segmentation')
+          .select('investor_profile')
+          .eq('prospect_guid', prospectGuid)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single()
+
+        if (error) {
+          return
+        }
+
+        setInvestorProfile(data?.investor_profile)
+      } catch (err) {
+        console.error('Error fetching investor profile:', err)
+      }
+    }
+
+    fetchUserProfile()
   }, [])
 
   // Fetch city overview from investment_locations (merged table)
@@ -123,6 +153,12 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
   }, [cityToUse])
 
 
+  // Helper function to format currency
+  const formatCurrency = useCallback((value, currency) => {
+    const symbols = { EUR: '€', USD: '$', GBP: '£' }
+    return `${symbols[currency] || ''}${value.toLocaleString()}`
+  }, [])
+
   // Metric explanations for tooltips
   const metricExplanations = {
     pricePerSqm: 'Average price range per square meter for properties in this neighborhood',
@@ -138,6 +174,293 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     rentalGrowth5Y: 'Historical rental price trend over the last 5 years'
   }
 
+  // Get profile-specific metrics for neighborhood cards
+  const getProfileMetrics = useCallback((neighborhood, profile) => {
+    const metrics = neighborhood.metrics
+
+    // Base metric always shown
+    const priceMetric = {
+      label: 'Price/sqm',
+      value: `${formatCurrency(metrics.pricePerSqm[selectedCurrency].min, selectedCurrency)} - ${formatCurrency(metrics.pricePerSqm[selectedCurrency].max, selectedCurrency)}`,
+      tooltip: metricExplanations.pricePerSqm
+    }
+
+    // Default metrics if no profile
+    if (!profile) {
+      return {
+        primary: [
+          priceMetric,
+          {
+            label: 'Rental Yield',
+            value: `${metrics.rentalYield.min}% - ${metrics.rentalYield.max}%`,
+            tooltip: metricExplanations.rentalYield
+          },
+          {
+            label: 'Days to Rent',
+            value: `${metrics.daysToRent.avg} days`,
+            tooltip: metricExplanations.daysToRent
+          }
+        ],
+        secondary: [
+          { label: 'Acquisition Tax', value: `${metrics.acquisitionTax}%`, tooltip: metricExplanations.acquisitionTax },
+          { label: 'Avg Holding Time', value: `${metrics.avgHoldingTime}y`, tooltip: metricExplanations.avgHoldingTime },
+          { label: 'Days on Market', value: `${metrics.avgDaysOnMarketSale} days`, tooltip: metricExplanations.avgDaysOnMarketSale },
+          { label: 'Rent/m²', value: formatCurrency(metrics.rentPerSqm[selectedCurrency].avg, selectedCurrency), tooltip: metricExplanations.rentPerSqm },
+          { label: 'Avg Rental Time', value: `${metrics.avgRentalTime}mo`, tooltip: metricExplanations.avgRentalTime },
+          { label: 'Days Available', value: `${metrics.daysAvailableToRent} days`, tooltip: metricExplanations.daysAvailableToRent }
+        ]
+      }
+    }
+
+    // Profile-specific metrics
+    switch (profile) {
+      case 'Income Seeker':
+        return {
+          primary: [
+            priceMetric,
+            {
+              label: 'Rental Yield',
+              value: `${metrics.rentalYield.min}% - ${metrics.rentalYield.max}%`,
+              tooltip: metricExplanations.rentalYield,
+              highlight: true // Income Seekers care most about yield
+            },
+            {
+              label: 'Days to Rent',
+              value: `${metrics.daysToRent.avg} days`,
+              tooltip: metricExplanations.daysToRent,
+              colorCode: metrics.daysToRent.avg <= 30 ? 'positive' : metrics.daysToRent.avg <= 60 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Rent/m²',
+              value: formatCurrency(metrics.rentPerSqm[selectedCurrency].avg, selectedCurrency),
+              tooltip: metricExplanations.rentPerSqm,
+              highlight: true // Shows absolute monthly income potential
+            }
+          ],
+          secondary: [
+            {
+              label: 'Avg Rental Time',
+              value: `${metrics.avgRentalTime}mo`,
+              tooltip: metricExplanations.avgRentalTime,
+              colorCode: metrics.avgRentalTime >= 12 ? 'positive' : 'neutral'
+            },
+            {
+              label: 'Days Available',
+              value: `${metrics.daysAvailableToRent} days`,
+              tooltip: metricExplanations.daysAvailableToRent,
+              colorCode: metrics.daysAvailableToRent >= 330 ? 'positive' : 'neutral'
+            },
+            { label: 'Acquisition Tax', value: `${metrics.acquisitionTax}%`, tooltip: metricExplanations.acquisitionTax },
+            { label: 'Avg Holding Time', value: `${metrics.avgHoldingTime}y`, tooltip: metricExplanations.avgHoldingTime },
+            {
+              label: 'Days on Market',
+              value: `${metrics.avgDaysOnMarketSale} days`,
+              tooltip: metricExplanations.avgDaysOnMarketSale,
+              colorCode: metrics.avgDaysOnMarketSale <= 75 ? 'positive' : metrics.avgDaysOnMarketSale <= 120 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Rental Growth',
+              value: `${metrics.rentalGrowth5Y?.[4] >= 0 ? '+' : ''}${metrics.rentalGrowth5Y?.[4]?.toFixed(1)}%`,
+              tooltip: metricExplanations.rentalGrowth5Y,
+              highlight: true, // Income stability through growing rents
+              colorCode: metrics.rentalGrowth5Y?.[4] >= 5 ? 'positive' : metrics.rentalGrowth5Y?.[4] >= 0 ? 'neutral' : 'warning'
+            }
+          ]
+        }
+
+      case 'Growth Hunter':
+        return {
+          primary: [
+            priceMetric,
+            {
+              label: 'Current Appreciation',
+              value: `${metrics.priceGrowth5Y?.[4] >= 0 ? '+' : ''}${metrics.priceGrowth5Y?.[4]?.toFixed(1)}%`,
+              tooltip: metricExplanations.priceGrowth5Y,
+              highlight: true, // Growth Hunters prioritize appreciation
+              colorCode: metrics.priceGrowth5Y?.[4] >= 5 ? 'positive' : metrics.priceGrowth5Y?.[4] >= 0 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Days on Market',
+              value: `${metrics.avgDaysOnMarketSale} days`,
+              tooltip: metricExplanations.avgDaysOnMarketSale,
+              colorCode: metrics.avgDaysOnMarketSale <= 75 ? 'positive' : metrics.avgDaysOnMarketSale <= 120 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Rental Growth',
+              value: `${metrics.rentalGrowth5Y?.[4] >= 0 ? '+' : ''}${metrics.rentalGrowth5Y?.[4]?.toFixed(1)}%`,
+              tooltip: metricExplanations.rentalGrowth5Y,
+              colorCode: metrics.rentalGrowth5Y?.[4] >= 5 ? 'positive' : metrics.rentalGrowth5Y?.[4] >= 0 ? 'neutral' : 'warning'
+            }
+          ],
+          secondary: [
+            {
+              label: 'Avg Holding Time',
+              value: `${metrics.avgHoldingTime}y`,
+              tooltip: metricExplanations.avgHoldingTime,
+              highlight: true
+            },
+            { label: 'Rental Yield', value: `${metrics.rentalYield.min}% - ${metrics.rentalYield.max}%`, tooltip: metricExplanations.rentalYield },
+            { label: 'Days to Rent', value: `${metrics.daysToRent.avg} days`, tooltip: metricExplanations.daysToRent },
+            { label: 'Acquisition Tax', value: `${metrics.acquisitionTax}%`, tooltip: metricExplanations.acquisitionTax },
+            {
+              label: 'Days on Market',
+              value: `${metrics.avgDaysOnMarketSale} days`,
+              tooltip: metricExplanations.avgDaysOnMarketSale,
+              highlight: true, // Exit timing critical for growth hunters
+              colorCode: metrics.avgDaysOnMarketSale <= 75 ? 'positive' : metrics.avgDaysOnMarketSale <= 120 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Price Growth (5Y Avg)',
+              value: `${(() => {
+                const avg = metrics.priceGrowth5Y.reduce((sum, val) => sum + val, 0) / metrics.priceGrowth5Y.length
+                return avg >= 0 ? '+' : ''
+              })()}${(metrics.priceGrowth5Y.reduce((sum, val) => sum + val, 0) / metrics.priceGrowth5Y.length).toFixed(1)}%`,
+              tooltip: 'Average annual price growth over the past 5 years',
+              colorCode: (metrics.priceGrowth5Y.reduce((sum, val) => sum + val, 0) / metrics.priceGrowth5Y.length) >= 5 ? 'positive' : (metrics.priceGrowth5Y.reduce((sum, val) => sum + val, 0) / metrics.priceGrowth5Y.length) >= 0 ? 'neutral' : 'warning'
+            }
+          ]
+        }
+
+      case 'Lifestyle Investor':
+        return {
+          primary: [
+            priceMetric,
+            {
+              label: 'Rental Yield',
+              value: `${metrics.rentalYield.min}% - ${metrics.rentalYield.max}%`,
+              tooltip: metricExplanations.rentalYield,
+              colorCode: metrics.rentalYield.max >= 5 ? 'positive' : 'neutral'
+            },
+            {
+              label: 'Days to Rent',
+              value: `${metrics.daysToRent.avg} days`,
+              tooltip: metricExplanations.daysToRent,
+              highlight: true, // Lifestyle wants easy management
+              colorCode: metrics.daysToRent.avg <= 30 ? 'positive' : metrics.daysToRent.avg <= 60 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Avg Rental Time',
+              value: `${metrics.avgRentalTime}mo`,
+              tooltip: metricExplanations.avgRentalTime,
+              highlight: true, // Stability = less hassle
+              colorCode: metrics.avgRentalTime >= 12 ? 'positive' : metrics.avgRentalTime >= 6 ? 'neutral' : 'warning'
+            }
+          ],
+          secondary: [
+            {
+              label: 'Days Available',
+              value: `${metrics.daysAvailableToRent} days`,
+              tooltip: metricExplanations.daysAvailableToRent,
+              highlight: true,
+              colorCode: metrics.daysAvailableToRent >= 330 ? 'positive' : 'neutral'
+            },
+            {
+              label: 'Price Appreciation',
+              value: `${metrics.priceGrowth5Y?.[4] >= 0 ? '+' : ''}${metrics.priceGrowth5Y?.[4]?.toFixed(1)}%`,
+              tooltip: metricExplanations.priceGrowth5Y,
+              colorCode: metrics.priceGrowth5Y?.[4] >= 5 ? 'positive' : 'neutral'
+            },
+            { label: 'Avg Holding Time', value: `${metrics.avgHoldingTime}y`, tooltip: metricExplanations.avgHoldingTime },
+            { label: 'Acquisition Tax', value: `${metrics.acquisitionTax}%`, tooltip: metricExplanations.acquisitionTax },
+            {
+              label: 'Days on Market',
+              value: `${metrics.avgDaysOnMarketSale} days`,
+              tooltip: metricExplanations.avgDaysOnMarketSale,
+              colorCode: metrics.avgDaysOnMarketSale <= 75 ? 'positive' : metrics.avgDaysOnMarketSale <= 120 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Days to Rent',
+              value: `${metrics.daysToRent.avg} days`,
+              tooltip: metricExplanations.daysToRent,
+              highlight: true, // Easy rental management when needed
+              colorCode: metrics.daysToRent.avg <= 30 ? 'positive' : metrics.daysToRent.avg <= 60 ? 'neutral' : 'warning'
+            }
+          ]
+        }
+
+      case 'Sophisticated Builder':
+        return {
+          primary: [
+            priceMetric,
+            {
+              label: 'Rental Yield',
+              value: `${metrics.rentalYield.min}% - ${metrics.rentalYield.max}%`,
+              tooltip: metricExplanations.rentalYield,
+              highlight: true
+            },
+            {
+              label: 'Price Growth',
+              value: `${metrics.priceGrowth5Y?.[4] >= 0 ? '+' : ''}${metrics.priceGrowth5Y?.[4]?.toFixed(1)}%`,
+              tooltip: metricExplanations.priceGrowth5Y,
+              highlight: true,
+              colorCode: metrics.priceGrowth5Y?.[4] >= 5 ? 'positive' : metrics.priceGrowth5Y?.[4] >= 0 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Days on Market',
+              value: `${metrics.avgDaysOnMarketSale} days`,
+              tooltip: metricExplanations.avgDaysOnMarketSale,
+              highlight: true, // Liquidity critical for portfolio optimization
+              colorCode: metrics.avgDaysOnMarketSale <= 75 ? 'positive' : metrics.avgDaysOnMarketSale <= 120 ? 'neutral' : 'warning'
+            }
+          ],
+          secondary: [
+            {
+              label: 'Days to Rent',
+              value: `${metrics.daysToRent.avg} days`,
+              tooltip: metricExplanations.daysToRent,
+              highlight: true,
+              colorCode: metrics.daysToRent.avg <= 30 ? 'positive' : 'neutral'
+            },
+            {
+              label: 'Avg Holding Time',
+              value: `${metrics.avgHoldingTime}y`,
+              tooltip: metricExplanations.avgHoldingTime
+            },
+            { label: 'Rent/m²', value: formatCurrency(metrics.rentPerSqm[selectedCurrency].avg, selectedCurrency), tooltip: metricExplanations.rentPerSqm },
+            { label: 'Acquisition Tax', value: `${metrics.acquisitionTax}%`, tooltip: metricExplanations.acquisitionTax },
+            {
+              label: 'Days on Market',
+              value: `${metrics.avgDaysOnMarketSale} days`,
+              tooltip: metricExplanations.avgDaysOnMarketSale,
+              colorCode: metrics.avgDaysOnMarketSale <= 75 ? 'positive' : metrics.avgDaysOnMarketSale <= 120 ? 'neutral' : 'warning'
+            },
+            {
+              label: 'Rental Growth',
+              value: `${metrics.rentalGrowth5Y?.[4] >= 0 ? '+' : ''}${metrics.rentalGrowth5Y?.[4]?.toFixed(1)}%`,
+              tooltip: metricExplanations.rentalGrowth5Y,
+              highlight: true, // Dual-optimization: yield + growth
+              colorCode: metrics.rentalGrowth5Y?.[4] >= 5 ? 'positive' : metrics.rentalGrowth5Y?.[4] >= 0 ? 'neutral' : 'warning'
+            }
+          ]
+        }
+
+      default:
+        return {
+          primary: [
+            priceMetric,
+            {
+              label: 'Rental Yield',
+              value: `${metrics.rentalYield.min}% - ${metrics.rentalYield.max}%`,
+              tooltip: metricExplanations.rentalYield
+            },
+            {
+              label: 'Days to Rent',
+              value: `${metrics.daysToRent.avg} days`,
+              tooltip: metricExplanations.daysToRent
+            }
+          ],
+          secondary: [
+            { label: 'Acquisition Tax', value: `${metrics.acquisitionTax}%`, tooltip: metricExplanations.acquisitionTax },
+            { label: 'Avg Holding Time', value: `${metrics.avgHoldingTime}y`, tooltip: metricExplanations.avgHoldingTime },
+            { label: 'Days on Market', value: `${metrics.avgDaysOnMarketSale} days`, tooltip: metricExplanations.avgDaysOnMarketSale },
+            { label: 'Rent/m²', value: formatCurrency(metrics.rentPerSqm[selectedCurrency].avg, selectedCurrency), tooltip: metricExplanations.rentPerSqm },
+            { label: 'Avg Rental Time', value: `${metrics.avgRentalTime}mo`, tooltip: metricExplanations.avgRentalTime },
+            { label: 'Days Available', value: `${metrics.daysAvailableToRent} days`, tooltip: metricExplanations.daysAvailableToRent }
+          ]
+        }
+    }
+  }, [selectedCurrency, formatCurrency])
+
   const handleDownloadReport = () => {
     if (cityToUse?.city === 'Dubai') {
       // Download the PDF for Dubai
@@ -151,11 +474,6 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     }
   }
 
-  const formatCurrency = (value, currency) => {
-    const symbols = { EUR: '€', USD: '$', GBP: '£' }
-    return `${symbols[currency] || ''}${value.toLocaleString()}`
-  }
-
   // Helper function to get color for growth chart based on value
   const getGrowthChartColor = (value) => {
     if (value >= 5) return '#10b981' // Green - Good growth (≥5%)
@@ -167,11 +485,13 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     const max = Math.max(...data)
     const min = Math.min(...data)
     const range = max - min || 1
+    const currentYear = new Date().getFullYear()
 
     const points = data.map((value, index) => {
       const x = (index / (data.length - 1)) * 100
       const y = 30 - ((value - min) / range) * 20
-      return { x, y, value }
+      const year = currentYear - (data.length - 1 - index) // Calculate year (5 years ago to now)
+      return { x, y, value, year }
     })
 
     const pathData = points.map((p, i) =>
@@ -199,7 +519,9 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
               cy={p.y}
               r="3"
               fill={chartColor}
-            />
+            >
+              <title>{p.year}: {p.value >= 0 ? '+' : ''}{p.value.toFixed(1)}%</title>
+            </circle>
           ))}
         </svg>
         <div className="growth-percentage" style={{ color: chartColor }}>
@@ -404,68 +726,44 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
 
                 <p className="location-description">{neighborhood.description}</p>
 
-                {/* Primary Metrics */}
+                {/* Primary Metrics - Profile-Based */}
                 <div className="location-metrics">
-                  <div className="metric">
-                    <div className="metric-label" data-tooltip={metricExplanations.pricePerSqm}>
-                      Price/sqm
+                  {getProfileMetrics(neighborhood, investorProfile).primary.map((metric, idx) => (
+                    <div key={idx} className={`metric ${metric.highlight ? 'metric-highlight' : ''}`}>
+                      <div className="metric-label" data-tooltip={metric.tooltip}>
+                        {metric.label}
+                      </div>
+                      <div className={`metric-value ${
+                        metric.highlight ? 'highlight' :
+                        metric.colorCode === 'positive' ? 'positive' :
+                        metric.colorCode === 'warning' ? 'warning' :
+                        metric.colorCode === 'neutral' ? 'neutral' :
+                        ''
+                      }`}>
+                        {metric.value}
+                      </div>
                     </div>
-                    <div className="metric-value">
-                      {formatCurrency(neighborhood.metrics.pricePerSqm[selectedCurrency].min, selectedCurrency)}
-                      {' - '}
-                      {formatCurrency(neighborhood.metrics.pricePerSqm[selectedCurrency].max, selectedCurrency)}
-                    </div>
-                  </div>
-                  <div className="metric">
-                    <div className="metric-label" data-tooltip={metricExplanations.rentalYield}>
-                      Rental Yield
-                    </div>
-                    <div className="metric-value growth">
-                      {neighborhood.metrics.rentalYield.min}% - {neighborhood.metrics.rentalYield.max}%
-                    </div>
-                  </div>
-                  <div className="metric">
-                    <div className="metric-label" data-tooltip={metricExplanations.daysToRent}>
-                      Days to Rent
-                    </div>
-                    <div className="metric-value">{neighborhood.metrics.daysToRent.avg} days</div>
-                  </div>
+                  ))}
                 </div>
 
-                {/* Secondary Metrics Grid */}
+                {/* Secondary Metrics Grid - Profile-Based */}
                 <div className="location-metrics-secondary">
-                  <div className="metric-secondary">
-                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.acquisitionTax}>
-                      Acquisition Tax
+                  {getProfileMetrics(neighborhood, investorProfile).secondary.map((metric, idx) => (
+                    <div key={idx} className={`metric-secondary ${metric.highlight ? 'metric-highlight' : ''}`}>
+                      <div className="metric-label-with-tooltip" data-tooltip={metric.tooltip}>
+                        {metric.label}
+                      </div>
+                      <div className={`metric-value ${
+                        metric.highlight ? 'highlight' :
+                        metric.colorCode === 'positive' ? 'positive' :
+                        metric.colorCode === 'warning' ? 'warning' :
+                        metric.colorCode === 'neutral' ? 'neutral' :
+                        ''
+                      }`}>
+                        {metric.value}
+                      </div>
                     </div>
-                    <div className="metric-value">{neighborhood.metrics.acquisitionTax}%</div>
-                  </div>
-                  <div className="metric-secondary">
-                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.avgHoldingTime}>
-                      Avg Holding Time
-                    </div>
-                    <div className="metric-value">{neighborhood.metrics.avgHoldingTime}y</div>
-                  </div>
-                  <div className="metric-secondary">
-                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.avgDaysOnMarketSale}>
-                      Days on Market
-                    </div>
-                    <div className="metric-value">{neighborhood.metrics.avgDaysOnMarketSale} days</div>
-                  </div>
-                  <div className="metric-secondary">
-                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.rentPerSqm}>
-                      Rent/m<sup>2</sup>
-                    </div>
-                    <div className="metric-value">
-                      {formatCurrency(neighborhood.metrics.rentPerSqm[selectedCurrency].avg, selectedCurrency)}
-                    </div>
-                  </div>
-                  <div className="metric-secondary">
-                    <div className="metric-label-with-tooltip" data-tooltip={metricExplanations.avgRentalTime}>
-                      Avg Rental Time
-                    </div>
-                    <div className="metric-value">{neighborhood.metrics.avgRentalTime}mo</div>
-                  </div>
+                  ))}
                 </div>
 
                 {/* Growth Charts */}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 import './NeighborhoodDetail.css'
+import FeaturedProperties from './FeaturedProperties'
 
 export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
   const navigate = useNavigate()
@@ -528,8 +529,14 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
           </div>
         </section>
 
-        {/* Property Listings Section */}
-        <section className="detail-section">
+        {/* Featured Properties Section */}
+        <FeaturedProperties
+          cityName={cityName}
+          neighborhoodName={neighborhood.name}
+        />
+
+        {/* OLD Property Listings Section - REPLACED ABOVE */}
+        <section className="detail-section" style={{display: 'none'}}>
           <h2 className="section-title">Featured Properties in {neighborhood.name}</h2>
           <p className="section-subtitle">Current investment opportunities with strong potential returns</p>
 
