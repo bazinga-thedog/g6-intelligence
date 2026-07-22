@@ -59,6 +59,8 @@ export default function LocationShowcase({ onCitySelect }) {
   }, [])
 
   const fetchLocations = async () => {
+    const startTime = Date.now()
+
     try {
       setLoading(true)
       setError(null)
@@ -103,11 +105,25 @@ export default function LocationShowcase({ onCitySelect }) {
       }))
 
       setRawLocations(transformedData)
+
+      // Ensure loading screen shows for at least 3 seconds
+      const elapsedTime = Date.now() - startTime
+      const remainingTime = Math.max(0, 3000 - elapsedTime)
+
+      setTimeout(() => {
+        setLoading(false)
+      }, remainingTime)
     } catch (err) {
       console.error('Error fetching locations:', err)
       setError(err.message)
-    } finally {
-      setLoading(false)
+
+      // Even on error, ensure minimum 3 second loading time
+      const elapsedTime = Date.now() - startTime
+      const remainingTime = Math.max(0, 3000 - elapsedTime)
+
+      setTimeout(() => {
+        setLoading(false)
+      }, remainingTime)
     }
   }
 
@@ -358,11 +374,13 @@ export default function LocationShowcase({ onCitySelect }) {
     const max = Math.max(...data)
     const min = Math.min(...data)
     const range = max - min || 1
+    const currentYear = new Date().getFullYear()
 
     const points = data.map((value, index) => {
       const x = (index / (data.length - 1)) * 100 // 100px width for 5 points
       const y = 30 - ((value - min) / range) * 20 // 30px height, 20px range
-      return { x, y, value }
+      const year = currentYear - (data.length - 1 - index) // Calculate year (5 years ago to now)
+      return { x, y, value, year }
     })
 
     const pathData = points.map((p, i) =>
@@ -390,7 +408,9 @@ export default function LocationShowcase({ onCitySelect }) {
               cy={p.y}
               r="3"
               fill={chartColor}
-            />
+            >
+              <title>{p.year}: {p.value >= 0 ? '+' : ''}{p.value.toFixed(1)}%</title>
+            </circle>
           ))}
         </svg>
         <div className="growth-percentage" style={{ color: chartColor }}>
