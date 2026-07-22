@@ -83,14 +83,29 @@ export default function ConversionModal({ isOpen, onClose, context }) {
           {/* Right Column - Full Service */}
           <div className="conversion-column conversion-column-recommended">
             <div className="conversion-badge conversion-badge-recommended">Recommended</div>
-            <div className="conversion-price">€1,180<span>/year</span></div>
             <h3 className="conversion-title">Complete Investment Support</h3>
             <p className="conversion-description">
               Full hands-on guidance through your entire investment journey with dedicated advisor support.
             </p>
+
+            {/* Three-column service breakdown */}
+            <div className="service-columns">
+              <div className="service-column">
+                <h4 className="service-column-title">Buy</h4>
+                <p className="service-column-description">Property acquisition support</p>
+              </div>
+              <div className="service-column">
+                <h4 className="service-column-title">Hold</h4>
+                <p className="service-column-description">Portfolio management</p>
+              </div>
+              <div className="service-column">
+                <h4 className="service-column-title">Sell</h4>
+                <p className="service-column-description">Exit strategy assistance</p>
+              </div>
+            </div>
+
             <div className="conversion-pricing-note">
-              <p>Annual fee of €1,180 includes complete investment support throughout the acquisition or sale process.</p>
-              <p className="conversion-pricing-highlight">Upon successful close, we charge an additional 1% commission on the transaction value.</p>
+              <p className="conversion-pricing-highlight">1% commission on successful transactions (buy or sell)</p>
             </div>
 
             <div className="conversion-benefits">
