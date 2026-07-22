@@ -10,14 +10,8 @@ const PropertyCard = ({ property }) => {
     return `${symbols[currency] || ''}${price.toLocaleString()}`
   }
 
-  const handleCardClick = () => {
-    if (property.propertyUrl) {
-      window.open(property.propertyUrl, '_blank', 'noopener,noreferrer')
-    }
-  }
-
   return (
-    <div className="property-card" onClick={handleCardClick} style={{ cursor: property.propertyUrl ? 'pointer' : 'default' }}>
+    <div className="property-card">
       {/* Hero Image */}
       <div className="property-image-container">
         <img
