@@ -461,13 +461,33 @@ export default function NeighborhoodShowcase({ selectedCity, onBack, onNeighborh
     }
   }, [selectedCurrency, formatCurrency])
 
-  const handleDownloadReport = () => {
+  const handleDownloadReport = async () => {
     if (cityToUse?.city === 'Dubai') {
-      // Download the PDF for Dubai
-      const link = document.createElement('a')
-      link.href = '/dubai-q1-2026-market-report.pdf'
-      link.download = 'dubai-q1-2026-market-report.pdf'
-      link.click()
+      try {
+        // Fetch the PDF as a blob to ensure proper binary handling
+        const response = await fetch('/dubai-q1-2026-market-report.pdf')
+
+        if (!response.ok) {
+          throw new Error('PDF not found')
+        }
+
+        const blob = await response.blob()
+
+        // Create a blob URL and download
+        const blobUrl = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = blobUrl
+        link.download = 'dubai-q1-2026-market-report.pdf'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+
+        // Clean up the blob URL after a short delay
+        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100)
+      } catch (error) {
+        console.error('Error downloading PDF:', error)
+        alert('Failed to download the report. Please try again.')
+      }
     } else {
       // Show message for other cities
       alert('Our agents are preparing this information. Take a look at Dubai to see the final result.')
