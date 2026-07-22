@@ -31,9 +31,9 @@ export default function ConversionModal({ isOpen, onClose, context }) {
         <div className="conversion-modal-content">
           {/* Left Column - Monthly Membership */}
           <div className="conversion-column">
+            <h3 className="conversion-title">Access to 3 Verified Networks</h3>
             <div className="conversion-badge">Monthly Membership</div>
             <div className="conversion-price">€99<span>/month</span></div>
-            <h3 className="conversion-title">Access to 3 Verified Networks</h3>
             <p className="conversion-description">
               Get instant access to verified broker contacts and 2 additional professional networks of your choice.
               Additional networks available at €99 each.
@@ -82,7 +82,6 @@ export default function ConversionModal({ isOpen, onClose, context }) {
 
           {/* Right Column - Full Service */}
           <div className="conversion-column conversion-column-recommended">
-            <div className="conversion-badge conversion-badge-recommended">Recommended</div>
             <h3 className="conversion-title">Complete Investment Support</h3>
             <p className="conversion-description">
               Full hands-on guidance through your entire investment journey with dedicated advisor support.
