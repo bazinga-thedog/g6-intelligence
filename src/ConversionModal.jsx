@@ -91,18 +91,19 @@ export default function ConversionModal({ isOpen, onClose, context }) {
             <div className="service-columns">
               <div className="service-column">
                 <h4 className="service-column-title">Buy</h4>
-                <p className="service-column-description">
-                  €1,180/year <span className="service-column-note">(refundable in case of successful acquisition)</span>
-                </p>
-                <p className="service-column-description">1% commission on successful acquisition</p>
+                <div className="service-column-description">
+                  €1,180/year
+                  <span className="service-column-note">(refundable in case of successful acquisition)</span>
+                </div>
+                <div className="service-column-description">1% commission on successful acquisition</div>
               </div>
               <div className="service-column">
                 <h4 className="service-column-title">Hold</h4>
-                <p className="service-column-description">10% annual rent + costs of fixing</p>
+                <div className="service-column-description">10% annual rent + costs of fixing</div>
               </div>
               <div className="service-column">
                 <h4 className="service-column-title">Sell</h4>
-                <p className="service-column-description">1% commission on successful sale</p>
+                <div className="service-column-description">1% commission on successful sale</div>
               </div>
             </div>
 
