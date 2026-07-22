@@ -4,6 +4,7 @@ import './ConversionModal.css'
 
 export default function ConversionModal({ isOpen, onClose, context }) {
   const navigate = useNavigate()
+  const [selectedPlan, setSelectedPlan] = useState('monthly') // 'monthly' or 'full'
 
   if (!isOpen) return null
 
@@ -29,15 +30,33 @@ export default function ConversionModal({ isOpen, onClose, context }) {
         </button>
 
         <div className="conversion-modal-content">
-          {/* Left Column - Monthly Membership */}
-          <div className="conversion-column">
-            <div className="conversion-badge">Monthly Membership</div>
-            <h3 className="conversion-title">Access to 3 Verified Networks</h3>
-            <div className="conversion-price">€99<span>/month</span></div>
-            <p className="conversion-description">
-              Get instant access to verified broker contacts and 2 additional professional networks of your choice.
-              Additional networks available at €99 each.
-            </p>
+          {/* Plan Selector */}
+          <div className="conversion-header">
+            <div className="plan-toggle">
+              <button
+                className={`plan-toggle-btn ${selectedPlan === 'monthly' ? 'active' : ''}`}
+                onClick={() => setSelectedPlan('monthly')}
+              >
+                Monthly Membership
+              </button>
+              <button
+                className={`plan-toggle-btn ${selectedPlan === 'full' ? 'active' : ''}`}
+                onClick={() => setSelectedPlan('full')}
+              >
+                Full Support
+              </button>
+            </div>
+          </div>
+
+          {/* Monthly Membership Content */}
+          {selectedPlan === 'monthly' && (
+            <div className="conversion-column conversion-single">
+              <h3 className="conversion-title">Access to 3 Verified Networks</h3>
+              <div className="conversion-price">€99<span>/month</span></div>
+              <p className="conversion-description">
+                Get instant access to verified broker contacts and 2 additional professional networks of your choice.
+                Additional networks available at €99 each.
+              </p>
 
             <div className="conversion-benefits">
               <div className="conversion-benefit">
@@ -72,20 +91,22 @@ export default function ConversionModal({ isOpen, onClose, context }) {
               </div>
             </div>
 
-            <button
-              className="conversion-cta conversion-cta-outlined"
-              onClick={handleMonthlySubmit}
-            >
-              Start Membership
-            </button>
-          </div>
+              <button
+                className="conversion-cta conversion-cta-outlined"
+                onClick={handleMonthlySubmit}
+              >
+                Start Membership
+              </button>
+            </div>
+          )}
 
-          {/* Right Column - Full Service */}
-          <div className="conversion-column conversion-column-recommended">
-            <h3 className="conversion-title">Complete Investment Support</h3>
-            <p className="conversion-description">
-              Full hands-on guidance through your entire investment journey with dedicated advisor support.
-            </p>
+          {/* Full Support Content */}
+          {selectedPlan === 'full' && (
+            <div className="conversion-column conversion-single">
+              <h3 className="conversion-title">Complete Investment Support</h3>
+              <p className="conversion-description">
+                Full hands-on guidance through your entire investment journey with dedicated advisor support.
+              </p>
 
             {/* Three-column service breakdown */}
             <div className="service-columns">
@@ -140,13 +161,14 @@ export default function ConversionModal({ isOpen, onClose, context }) {
               </div>
             </div>
 
-            <button
-              className="conversion-cta conversion-cta-filled"
-              onClick={handleFullServiceSubmit}
-            >
-              Contact Us
-            </button>
-          </div>
+              <button
+                className="conversion-cta conversion-cta-filled"
+                onClick={handleFullServiceSubmit}
+              >
+                Contact Us
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
