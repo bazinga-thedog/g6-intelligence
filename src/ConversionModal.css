@@ -216,6 +216,12 @@
   flex-shrink: 0;
 }
 
+.service-column-note {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
 /* Pricing Note */
 .conversion-pricing-note {
   background: rgba(99, 102, 241, 0.1);
