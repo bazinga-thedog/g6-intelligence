@@ -1,0 +1,14 @@
+# Cloudflare Pages - ensure SPAs work correctly
+# Don't redirect static assets
+/*.pdf   /:splat   200
+/*.css   /:splat   200
+/*.js    /:splat   200
+/*.png   /:splat   200
+/*.jpg   /:splat   200
+/*.svg   /:splat   200
+/*.ico   /:splat   200
+/*.woff  /:splat   200
+/*.woff2 /:splat   200
+
+# Redirect everything else to index.html for SPA routing
+/*    /index.html   200
