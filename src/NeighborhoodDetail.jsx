@@ -161,6 +161,13 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
     )
   }
 
+  // Helper function to get high-res hero image
+  const getHeroImageUrl = (imageUrl) => {
+    if (!imageUrl) return imageUrl
+    // Replace w_800 with w_1900 for higher resolution hero images
+    return imageUrl.replace(/w_800/g, 'w_1900')
+  }
+
   return (
     <div className="neighborhood-detail">
       {/* Navigation Header */}
@@ -179,7 +186,7 @@ export default function NeighborhoodDetail({ neighborhood, cityName, onBack }) {
       {/* Hero Banner */}
       <div className="detail-hero">
         <div className="detail-hero-image">
-          <img src={neighborhood.image} alt={neighborhood.name} />
+          <img src={getHeroImageUrl(neighborhood.image)} alt={neighborhood.name} />
           <div className="detail-hero-overlay"></div>
         </div>
         <div className="detail-hero-content">
