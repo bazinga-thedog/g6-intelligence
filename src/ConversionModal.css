@@ -271,9 +271,9 @@
 
 /* Benefits List */
 .conversion-benefits {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem 1.5rem;
 }
 
 .conversion-benefit {
@@ -427,5 +427,10 @@
 
   .service-column {
     padding: 0.875rem;
+  }
+
+  .conversion-benefits {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
   }
 }
