@@ -96,7 +96,7 @@ export default function ConversionModal({ isOpen, onClose, context }) {
               </div>
               <div className="service-column">
                 <h4 className="service-column-title">Hold</h4>
-                <p className="service-column-description">Portfolio management</p>
+                <p className="service-column-description">10% annual rent + costs of fixing</p>
               </div>
               <div className="service-column">
                 <h4 className="service-column-title">Sell</h4>
