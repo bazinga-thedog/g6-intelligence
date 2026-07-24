@@ -1,5 +1,5 @@
 // Cloudflare Pages Function to send appointment emails via Resend
-import { Resend } from 'resend';
+// Uses fetch API directly instead of Resend SDK for better Cloudflare compatibility
 
 export async function onRequestPost(context) {
   try {
@@ -25,9 +25,6 @@ export async function onRequestPost(context) {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
-    // Initialize Resend
-    const resend = new Resend(resendApiKey);
 
     // Format the selected time slots for the email
     const formattedSlots = appointmentData.selectedSlots
@@ -85,29 +82,35 @@ export async function onRequestPost(context) {
       </html>
     `;
 
-    // Send email using Resend
-    // Note: In test mode, Resend can only send to verified email addresses
-    // If you get a 403 error, verify your domain at resend.com/domains
-    const emailData = await resend.emails.send({
-      from: 'G6 Intelligence <onboarding@resend.dev>',
-      to: ['thedogbazinga@gmail.com'],
-      subject: `New Consultation Request - ${appointmentData.name}`,
-      html: emailHtml,
+    // Send email using Resend API directly via fetch
+    const resendResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'G6 Intelligence <onboarding@resend.dev>',
+        to: ['thedogbazinga@gmail.com'],
+        subject: `New Consultation Request - ${appointmentData.name}`,
+        html: emailHtml,
+      })
     });
 
-    // Check if there was an error in the response
-    if (emailData.error) {
-      throw new Error(emailData.error.message || 'Failed to send email');
-    }
+    const resendData = await resendResponse.json();
 
-    const data = emailData.data || emailData;
+    // Check if there was an error
+    if (!resendResponse.ok) {
+      console.error('Resend API error:', resendData);
+      throw new Error(resendData.message || 'Failed to send email via Resend');
+    }
 
     // Return success response
     return new Response(
       JSON.stringify({
         success: true,
         message: 'Appointment email sent successfully',
-        emailId: data.id
+        emailId: resendData.id
       }),
       {
         status: 200,
