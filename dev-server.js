@@ -3,6 +3,7 @@ import express from 'express';
 import { Resend } from 'resend';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
+import fetch from 'node-fetch';
 
 dotenv.config();
 
@@ -112,11 +113,64 @@ app.post('/api/send-appointment-email', async (req, res) => {
 
     console.log('✅ Email sent successfully! ID:', data.id);
 
+    // Save appointment data to Supabase
+    console.log('💾 Saving to Supabase...');
+
+    const supabaseUrl = process.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+    let supabaseRecord = null;
+
+    if (supabaseUrl && supabaseAnonKey) {
+      try {
+        const supabaseData = {
+          name: appointmentData.name,
+          email: appointmentData.email || null,
+          phone: appointmentData.phone || null,
+          language: appointmentData.language,
+          timezone: appointmentData.timezone,
+          selected_slots: appointmentData.selectedSlots,
+          email_sent: true,
+          email_id: data.id,
+          status: 'pending',
+          user_agent: req.get('user-agent') || null,
+          source_page: req.get('referer') || null
+        };
+
+        const supabaseResponse = await fetch(`${supabaseUrl}/rest/v1/consultation_appointments`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(supabaseData)
+        });
+
+        if (supabaseResponse.ok) {
+          const records = await supabaseResponse.json();
+          supabaseRecord = records[0];
+          console.log('✅ Saved to Supabase! ID:', supabaseRecord?.id);
+        } else {
+          const error = await supabaseResponse.text();
+          console.error('⚠️  Failed to save to Supabase:', error);
+          // Don't fail the request if Supabase save fails
+        }
+      } catch (supabaseError) {
+        console.error('⚠️  Supabase error:', supabaseError.message);
+        // Don't fail the request if Supabase save fails
+      }
+    } else {
+      console.log('⚠️  Supabase credentials not configured, skipping database save');
+    }
+
     // Return success response
     res.json({
       success: true,
       message: 'Appointment email sent successfully',
-      emailId: data.id
+      emailId: data.id,
+      appointmentId: supabaseRecord?.id || null
     });
 
   } catch (error) {

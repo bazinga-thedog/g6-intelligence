@@ -5,12 +5,21 @@ export async function onRequestPost(context) {
   try {
     const { request, env } = context;
 
-    // Get the Resend API key from environment variables
+    // Get environment variables
     const resendApiKey = env.RESEND_API_KEY;
+    const supabaseUrl = env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY;
 
     if (!resendApiKey) {
       return new Response(
         JSON.stringify({ error: 'RESEND_API_KEY not configured' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return new Response(
+        JSON.stringify({ error: 'Supabase configuration missing' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -105,12 +114,50 @@ export async function onRequestPost(context) {
       throw new Error(resendData.message || 'Failed to send email via Resend');
     }
 
+    // Save appointment data to Supabase
+    const supabaseData = {
+      name: appointmentData.name,
+      email: appointmentData.email || null,
+      phone: appointmentData.phone || null,
+      language: appointmentData.language,
+      timezone: appointmentData.timezone,
+      selected_slots: appointmentData.selectedSlots,
+      email_sent: true,
+      email_id: resendData.id,
+      status: 'pending',
+      user_agent: request.headers.get('user-agent') || null,
+      source_page: request.headers.get('referer') || null
+    };
+
+    const supabaseResponse = await fetch(`${supabaseUrl}/rest/v1/consultation_appointments`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(supabaseData)
+    });
+
+    let supabaseRecord = null;
+    if (supabaseResponse.ok) {
+      const records = await supabaseResponse.json();
+      supabaseRecord = records[0];
+      console.log('Saved to Supabase:', supabaseRecord?.id);
+    } else {
+      const error = await supabaseResponse.text();
+      console.error('Failed to save to Supabase:', error);
+      // Don't fail the request if Supabase save fails, email was still sent
+    }
+
     // Return success response
     return new Response(
       JSON.stringify({
         success: true,
         message: 'Appointment email sent successfully',
-        emailId: resendData.id
+        emailId: resendData.id,
+        appointmentId: supabaseRecord?.id || null
       }),
       {
         status: 200,
