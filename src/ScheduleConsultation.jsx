@@ -113,10 +113,37 @@ export default function ScheduleConsultation() {
     return formData.selectedSlots.filter(slot => slot.date === date).length
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // TODO: Send data to backend/CRM
-    console.log('Consultation scheduled:', formData)
+
+    try {
+      // Determine API URL based on environment
+      const apiUrl = import.meta.env.DEV
+        ? 'http://localhost:3001/api/send-appointment-email'
+        : '/api/send-appointment-email'
+
+      // Send appointment data to the API
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        console.error('Failed to send appointment email:', result)
+        // Still navigate to confirmation even if email fails
+      } else {
+        console.log('Appointment email sent successfully:', result)
+      }
+    } catch (error) {
+      console.error('Error sending appointment email:', error)
+      // Still navigate to confirmation even if email fails
+    }
+
     // Navigate to confirmation page with form data
     navigate('/consultation-confirmation', { state: { formData } })
   }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Appointment Email Preview</title>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: #e9ecef; padding: 20px; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+      .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+      .section { margin-bottom: 20px; }
+      .label { font-weight: bold; color: #16213e; }
+      .value { margin-left: 10px; }
+      .slots { background: white; padding: 15px; border-radius: 6px; margin-top: 10px; white-space: pre-line; border: 1px solid #dee2e6; }
+      .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+      .preview-note { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: 6px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <div class="preview-note">
+      <strong>📧 Email Template Preview</strong><br>
+      This is how the appointment notification email will appear in your inbox.
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <h1>New Consultation Request</h1>
+        <p>G6 Intelligence</p>
+      </div>
+      <div class="content">
+        <div class="section">
+          <p><span class="label">Name:</span><span class="value">Alexander Hamilton</span></p>
+          <p><span class="label">Email:</span><span class="value">alexander.hamilton@company.com</span></p>
+          <p><span class="label">Phone:</span><span class="value">+44 20 7123 4567</span></p>
+          <p><span class="label">Preferred Language:</span><span class="value">English</span></p>
+          <p><span class="label">Timezone:</span><span class="value">Europe/London</span></p>
+        </div>
+
+        <div class="section">
+          <p class="label">Available Time Slots (3 selected):</p>
+          <div class="slots">Monday, July 29, 2026 at 10:00
+Tuesday, July 30, 2026 at 14:30
+Wednesday, July 31, 2026 at 11:00</div>
+        </div>
+
+        <div class="footer">
+          <p>This is an automated notification from your G6 Intelligence website.</p>
+          <p>Received: 7/24/2026, 4:30:00 AM</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

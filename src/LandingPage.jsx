@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Survey from './Survey'
 import { generateFreshGuid } from './prospectGuid'
 import './LandingPage.css'
 
 export default function LandingPage({ onSurveyComplete }) {
+  const navigate = useNavigate()
   const [selectedResponse, setSelectedResponse] = useState(null)
   const [showSurvey, setShowSurvey] = useState(false)
   const [showVideoModal, setShowVideoModal] = useState(false)
@@ -43,7 +45,7 @@ export default function LandingPage({ onSurveyComplete }) {
           </div>
           <div className="nav-actions">
             <button className="login-btn">Login</button>
-            <button className="contact-btn">📞 Contact Us</button>
+            <button className="contact-btn" onClick={() => navigate('/schedule-consultation')}>📞 Contact Us</button>
           </div>
         </div>
       </nav>
@@ -186,7 +188,7 @@ export default function LandingPage({ onSurveyComplete }) {
             </div>
           </div>
           <div className="footer-mobile-contact">
-            <button className="contact-btn">📞 Contact Us</button>
+            <button className="contact-btn" onClick={() => navigate('/schedule-consultation')}>📞 Contact Us</button>
           </div>
           <div className="footer-bottom">
             <p>&copy; 2026 G6 Intelligence. All rights reserved.</p>
